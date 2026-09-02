@@ -7,6 +7,13 @@ export const categoryApi = {
     return response.data;
   },
 
+  getCategoryById: async (id: string): Promise<Category> => {
+    const response = await apiClient.get<Category>(
+      ENDPOINTS.CATEGORIES.DETAIL(id),
+    );
+    return response.data;
+  },
+
   createCategory: async (data: CreateCategoryInput): Promise<Category> => {
     const response = await apiClient.post<Category>(
       ENDPOINTS.CATEGORIES.CREATE,

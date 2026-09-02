@@ -53,9 +53,14 @@ export const TransactionDetailsPage: React.FC<TransactionDetailsPageProps> = ({
         }
 
         if (categoryId) {
-          const categories = await categoryApi.getCategories();
-          const found = categories.find((c) => c.id === categoryId);
-          if (found) setCategory(found);
+          try {
+            const c = await categoryApi.getCategoryById(categoryId);
+            if (c) setCategory(c);
+          } catch {
+            const categories = await categoryApi.getCategories();
+            const found = categories.find((item) => item.id === categoryId);
+            if (found) setCategory(found);
+          }
         }
       } catch {
         // Handled silently
@@ -176,29 +181,38 @@ export const TransactionDetailsPage: React.FC<TransactionDetailsPageProps> = ({
 
         <View style={styles.divider} />
 
-        {/* Category info if present */}
-        {category && (
-          <>
-            <View style={styles.infoRow}>
-              <View style={styles.infoIconWrapper}>
-                <Tag size={18} color={category.color || colors.primary} />
+        {/* Category info */}
+        <View style={styles.infoRow}>
+          <View style={styles.infoIconWrapper}>
+            <Tag
+              size={18}
+              color={
+                category?.color ||
+                (categoryId ? colors.primary : colors.textSecondary)
+              }
+            />
+          </View>
+          <View style={styles.infoTextContainer}>
+            <Text style={styles.infoLabel}>Categoria</Text>
+            {category ? (
+              <View style={styles.categoryNameRow}>
+                <View
+                  style={[
+                    styles.categoryDot,
+                    { backgroundColor: category.color || colors.primary },
+                  ]}
+                />
+                <Text style={styles.infoValue}>{category.name}</Text>
               </View>
-              <View style={styles.infoTextContainer}>
-                <Text style={styles.infoLabel}>Categoria</Text>
-                <View style={styles.categoryNameRow}>
-                  <View
-                    style={[
-                      styles.categoryDot,
-                      { backgroundColor: category.color || colors.primary },
-                    ]}
-                  />
-                  <Text style={styles.infoValue}>{category.name}</Text>
-                </View>
-              </View>
-            </View>
-            <View style={styles.divider} />
-          </>
-        )}
+            ) : (
+              <Text style={styles.infoValueMuted}>
+                {categoryId ? 'Carregando...' : 'Nenhuma'}
+              </Text>
+            )}
+          </View>
+        </View>
+
+        <View style={styles.divider} />
 
         {/* Installments */}
         {transaction.installmentNumber && (
