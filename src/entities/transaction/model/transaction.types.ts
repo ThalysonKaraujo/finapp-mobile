@@ -9,6 +9,22 @@ export const TransactionTypeEnum = z.enum([
 
 export type TransactionType = z.infer<typeof TransactionTypeEnum>;
 
+export const TransactionCategorySchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  color: z.string().nullable().optional(),
+  icon: z.string().nullable().optional(),
+});
+
+export type TransactionCategory = z.infer<typeof TransactionCategorySchema>;
+
+export const TransactionWalletSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+});
+
+export type TransactionWallet = z.infer<typeof TransactionWalletSchema>;
+
 export const TransactionSchema = z.object({
   id: z.string(),
   amount: z.number(), // In cents
@@ -18,6 +34,8 @@ export const TransactionSchema = z.object({
   userId: z.string(),
   walletId: z.string().nullable().optional(),
   categoryId: z.string().nullable().optional(),
+  category: TransactionCategorySchema.nullable().optional(),
+  wallet: TransactionWalletSchema.nullable().optional(),
   recurrenceId: z.string().nullable().optional(),
   installmentNumber: z.number().nullable().optional(),
   totalInstallments: z.number().nullable().optional(),

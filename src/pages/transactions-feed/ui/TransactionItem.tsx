@@ -22,8 +22,6 @@ export const TransactionItem: React.FC<TransactionItemProps> = ({
 }) => {
   const isIncome =
     transaction.type === 'INCOME' || transaction.type === 'TRANSFER_IN';
-  const _isExpense =
-    transaction.type === 'EXPENSE' || transaction.type === 'TRANSFER_OUT';
   const isTransfer =
     transaction.type === 'TRANSFER_IN' || transaction.type === 'TRANSFER_OUT';
 
@@ -69,7 +67,36 @@ export const TransactionItem: React.FC<TransactionItemProps> = ({
             </View>
           )}
         </View>
-        <Text style={styles.date}>{formatDateFriendly(transaction.date)}</Text>
+
+        {/* Subtitle with date, category and wallet */}
+        <View style={styles.metaRow}>
+          <Text style={styles.metaText}>
+            {formatDateFriendly(transaction.date)}
+          </Text>
+
+          {transaction.category && (
+            <View style={styles.categoryPill}>
+              <View
+                style={[
+                  styles.categoryDot,
+                  {
+                    backgroundColor:
+                      transaction.category.color || colors.primary,
+                  },
+                ]}
+              />
+              <Text style={styles.categoryText} numberOfLines={1}>
+                {transaction.category.name}
+              </Text>
+            </View>
+          )}
+
+          {transaction.wallet && (
+            <Text style={styles.walletText} numberOfLines={1}>
+              • {transaction.wallet.name}
+            </Text>
+          )}
+        </View>
       </View>
 
       <View style={styles.amountContainer}>
@@ -133,10 +160,41 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
     fontWeight: '700',
   },
-  date: {
+  metaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 3,
+    flexWrap: 'wrap',
+  },
+  metaText: {
     ...typography.caption,
     color: colors.textMuted,
-    marginTop: 2,
+  },
+  categoryPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: colors.surfaceSubtle,
+    paddingHorizontal: 6,
+    paddingVertical: 1.5,
+    borderRadius: borderRadius.full,
+  },
+  categoryDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+  },
+  categoryText: {
+    ...typography.caption,
+    fontSize: 11,
+    color: colors.textPrimary,
+    fontWeight: '500',
+  },
+  walletText: {
+    ...typography.caption,
+    fontSize: 11,
+    color: colors.textSecondary,
   },
   amountContainer: {
     alignItems: 'flex-end',
