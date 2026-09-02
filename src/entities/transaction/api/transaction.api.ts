@@ -3,6 +3,7 @@ import {
   CreateTransactionInput,
   PaginatedTransactionsResponse,
   Transaction,
+  TransferTransactionInput,
 } from '../model/transaction.types';
 
 export const transactionApi = {
@@ -33,6 +34,16 @@ export const transactionApi = {
       ENDPOINTS.TRANSACTIONS.CREATE,
       data,
     );
+    return response.data;
+  },
+
+  transfer: async (
+    data: TransferTransactionInput,
+  ): Promise<{ transferOut: Transaction; transferIn: Transaction }> => {
+    const response = await apiClient.post<{
+      transferOut: Transaction;
+      transferIn: Transaction;
+    }>(ENDPOINTS.TRANSACTIONS.TRANSFER, data);
     return response.data;
   },
 
