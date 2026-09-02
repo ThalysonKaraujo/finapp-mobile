@@ -4,6 +4,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { BarChart3, Receipt, Wallet } from 'lucide-react-native';
 import React from 'react';
 import { StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ReportsPage } from '@/pages/reports';
 import { TransactionsFeedPage } from '@/pages/transactions-feed';
 import { WalletsAndObjectivesPage } from '@/pages/wallets-and-objectives';
@@ -13,6 +14,7 @@ import { AppStackParamList, AppTabParamList } from './types';
 const Tab = createBottomTabNavigator<AppTabParamList>();
 
 export const BottomTabNavigator: React.FC = () => {
+  const insets = useSafeAreaInsets();
   const navigation =
     useNavigation<NativeStackNavigationProp<AppStackParamList>>();
 
@@ -22,7 +24,13 @@ export const BottomTabNavigator: React.FC = () => {
         headerShown: false,
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.textSecondary,
-        tabBarStyle: styles.tabBar,
+        tabBarStyle: [
+          styles.tabBar,
+          {
+            height: 56 + (insets.bottom > 0 ? insets.bottom : 6),
+            paddingBottom: insets.bottom > 0 ? insets.bottom : 6,
+          },
+        ],
         tabBarLabelStyle: styles.tabLabel,
       }}
     >
@@ -88,9 +96,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     borderTopWidth: 1,
     borderTopColor: colors.border,
-    height: 60,
-    paddingBottom: 8,
-    paddingTop: 8,
+    paddingTop: 6,
   },
   tabLabel: {
     ...typography.caption,
