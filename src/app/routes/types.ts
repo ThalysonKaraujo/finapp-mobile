@@ -1,3 +1,4 @@
+import { Objective } from '@/entities/objective';
 import { Transaction } from '@/entities/transaction';
 
 export type AuthStackParamList = {
@@ -5,8 +6,22 @@ export type AuthStackParamList = {
   Register: undefined;
 };
 
+export type AppTabParamList = {
+  TransactionsTab: undefined;
+  WalletsAndObjectivesTab: undefined;
+  ReportsTab: undefined;
+};
+
 export type AppStackParamList = {
-  TransactionsFeed: undefined;
+  MainTabs: undefined;
   CreateTransaction: undefined;
+  CreateWallet: undefined;
+  CreateCategory: undefined;
+  CreateObjective: undefined;
+  DepositWithdrawObjective: {
+    objective: Objective;
+    mode?: 'DEPOSIT' | 'WITHDRAW';
+  };
+  Transfer: undefined;
   TransactionDetails: { transaction: Transaction };
 };
