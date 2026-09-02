@@ -9,15 +9,33 @@ export const TransactionTypeEnum = z.enum([
 
 export type TransactionType = z.infer<typeof TransactionTypeEnum>;
 
+export const TransactionCategorySchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  color: z.string().nullable().optional(),
+  icon: z.string().nullable().optional(),
+});
+
+export type TransactionCategory = z.infer<typeof TransactionCategorySchema>;
+
+export const TransactionWalletSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+});
+
+export type TransactionWallet = z.infer<typeof TransactionWalletSchema>;
+
 export const TransactionSchema = z.object({
   id: z.string(),
-  amount: z.number(), // In cents
+  amount: z.number(),
   type: TransactionTypeEnum,
   title: z.string(),
-  date: z.string(), // ISO string
+  date: z.string(),
   userId: z.string(),
   walletId: z.string().nullable().optional(),
   categoryId: z.string().nullable().optional(),
+  category: TransactionCategorySchema.nullable().optional(),
+  wallet: TransactionWalletSchema.nullable().optional(),
   recurrenceId: z.string().nullable().optional(),
   installmentNumber: z.number().nullable().optional(),
   totalInstallments: z.number().nullable().optional(),
@@ -39,6 +57,31 @@ export const CreateTransactionSchema = z.object({
 });
 
 export type CreateTransactionInput = z.infer<typeof CreateTransactionSchema>;
+
+export const UpdateTransactionSchema = CreateTransactionSchema.partial().extend(
+  {
+    updateFutureInstallments: z.boolean().optional(),
+  },
+);
+
+export type UpdateTransactionInput = z.infer<typeof UpdateTransactionSchema>;
+
+export const TransferTransactionSchema = z
+  .object({
+    sourceWalletId: z.string().min(1, 'Selecione a carteira de origem'),
+    destinationWalletId: z.string().min(1, 'Selecione a carteira de destino'),
+    amount: z.number().positive('O valor deve ser maior que zero'),
+    title: z.string().min(2, 'O título deve ter pelo menos 2 caracteres'),
+    date: z.string().min(1, 'A data é obrigatória'),
+  })
+  .refine((data) => data.sourceWalletId !== data.destinationWalletId, {
+    message: 'As carteiras de origem e destino devem ser diferentes',
+    path: ['destinationWalletId'],
+  });
+
+export type TransferTransactionInput = z.infer<
+  typeof TransferTransactionSchema
+>;
 
 export interface TransactionsMeta {
   total: number;

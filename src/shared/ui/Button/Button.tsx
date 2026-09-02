@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
   rightIconContainer: {
     marginLeft: spacing.sm,
   },
-  // Sizes
+
   size_sm: {
     paddingVertical: spacing.sm,
     paddingHorizontal: spacing.md,
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.xl,
     minHeight: 56,
   },
-  // Variants
+
   primary: {
     backgroundColor: colors.primary,
   },
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
   disabled: {
     opacity: 0.5,
   },
-  // Text
+
   textBase: {
     fontWeight: '600',
     textAlign: 'center',

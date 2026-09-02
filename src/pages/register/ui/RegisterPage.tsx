@@ -52,9 +52,7 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({
           [{ text: 'Ir para o Login', onPress: onNavigateToLogin }],
         );
       }
-    } catch (_err: any) {
-      // Error handled by store
-    }
+    } catch (_err: any) {}
   };
 
   return (

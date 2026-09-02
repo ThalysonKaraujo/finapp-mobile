@@ -8,22 +8,26 @@ export const apiClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',
+    Origin: 'http://localhost:3000',
   },
 });
 
-// Attach Authorization Bearer token if present
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = appStorage.getString(StorageKeys.AUTH_TOKEN);
-    if (token && config.headers) {
-      config.headers.Authorization = `Bearer ${token}`;
+    if (config.headers) {
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      if (!config.headers.Origin) {
+        config.headers.Origin = 'http://localhost:3000';
+      }
     }
     return config;
   },
   (error: AxiosError) => Promise.reject(error),
 );
 
-// Format and handle API errors cleanly
 apiClient.interceptors.response.use(
   (response) => response,
   (

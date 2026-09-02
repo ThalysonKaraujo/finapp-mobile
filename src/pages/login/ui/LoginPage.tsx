@@ -37,15 +37,12 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
     try {
       await signIn(email.trim(), password);
-    } catch (_err: any) {
-      // Error handled by store
-    }
+    } catch (_err: any) {}
   };
 
   return (
     <ScreenWrapper backgroundColor={colors.surface} scrollable>
       <View style={styles.container}>
-        {/* Header Branding */}
         <View style={styles.brandContainer}>
           <View style={styles.logoBadge}>
             <Wallet size={32} color={colors.primary} />
@@ -56,7 +53,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           </Text>
         </View>
 
-        {/* Login Card */}
         <Card variant='outlined' padding='lg' style={styles.card}>
           <Text style={styles.formTitle}>Acesse sua conta</Text>
 
@@ -105,7 +101,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           />
         </Card>
 
-        {/* Register CTA */}
         <View style={styles.footer}>
           <Text style={styles.footerText}>Não tem uma conta?</Text>
           <TouchableOpacity
@@ -116,7 +111,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           </TouchableOpacity>
         </View>
 
-        {/* Security badge */}
         <View style={styles.securityBadge}>
           <ShieldCheck size={16} color={colors.textMuted} />
           <Text style={styles.securityText}>

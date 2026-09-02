@@ -1,11 +1,5 @@
 import { Platform } from 'react-native';
 
-/**
- * Configure API Base URL:
- * - iOS Simulator / Web: http://localhost:3000
- * - Android Emulator: http://10.0.2.2:3000
- * - Physical Device: Change to your local LAN IP (e.g., http://192.168.1.50:3000)
- */
 export const API_BASE_URL = Platform.select({
   android: 'http://10.0.2.2:3000/api',
   default: 'http://localhost:3000/api',
@@ -30,9 +24,33 @@ export const ENDPOINTS = {
     LIST: '/wallets',
     CREATE: '/wallets',
     DETAIL: (id: string) => `/wallets/${id}`,
+    UPDATE: (id: string) => `/wallets/${id}`,
+    DELETE: (id: string) => `/wallets/${id}`,
   },
   CATEGORIES: {
     LIST: '/categories',
     CREATE: '/categories',
+    DETAIL: (id: string) => `/categories/${id}`,
+    UPDATE: (id: string) => `/categories/${id}`,
+    DELETE: (id: string) => `/categories/${id}`,
+  },
+  OBJECTIVES: {
+    LIST: '/objectives',
+    CREATE: '/objectives',
+    DETAIL: (id: string) => `/objectives/${id}`,
+    UPDATE: (id: string) => `/objectives/${id}`,
+    DELETE: (id: string) => `/objectives/${id}`,
+    DEPOSIT: (id: string) => `/objectives/${id}/deposit`,
+    WITHDRAW: (id: string) => `/objectives/${id}/withdraw`,
+  },
+  REPORTS: {
+    MONTHLY: '/reports/monthly',
+  },
+  BUDGETS: {
+    LIST: '/budgets',
+    CREATE: '/budgets',
+    DETAIL: (id: string) => `/budgets/${id}`,
+    UPDATE: (id: string) => `/budgets/${id}`,
+    DELETE: (id: string) => `/budgets/${id}`,
   },
 } as const;

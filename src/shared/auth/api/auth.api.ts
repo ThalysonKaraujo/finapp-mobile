@@ -33,9 +33,7 @@ export const authApi = {
   signOut: async (): Promise<void> => {
     try {
       await apiClient.post(ENDPOINTS.AUTH.SIGN_OUT);
-    } catch {
-      // Best effort sign out
-    }
+    } catch {}
   },
 
   getSession: async (): Promise<AuthSession | null> => {

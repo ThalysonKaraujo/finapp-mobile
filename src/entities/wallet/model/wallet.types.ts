@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const WalletSchema = z.object({
   id: z.string(),
   name: z.string().min(1, 'O nome da carteira é obrigatório'),
-  balance: z.number(), // Em centavos
+  balance: z.number(),
   userId: z.string(),
   createdAt: z.string().optional(),
   updatedAt: z.string().optional(),

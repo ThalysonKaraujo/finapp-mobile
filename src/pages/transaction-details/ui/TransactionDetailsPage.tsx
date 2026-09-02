@@ -1,7 +1,17 @@
-import { Calendar, Hash, Layers, Trash2 } from 'lucide-react-native';
-import React, { useState } from 'react';
-import { Alert, StyleSheet, Text, View } from 'react-native';
+import {
+  Calendar,
+  Hash,
+  Layers,
+  Pencil,
+  Tag,
+  Trash2,
+  Wallet as WalletIcon,
+} from 'lucide-react-native';
+import React, { useEffect, useState } from 'react';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Category, categoryApi } from '@/entities/category';
 import { Transaction, transactionApi } from '@/entities/transaction';
+import { Wallet, walletApi } from '@/entities/wallet';
 import { formatCentsToBRL, formatDateFull } from '@/shared/lib';
 import { colors, spacing, typography } from '@/shared/theme';
 import { Badge, Button, Card, Header, ScreenWrapper } from '@/shared/ui';
@@ -10,14 +20,52 @@ interface TransactionDetailsPageProps {
   transaction: Transaction;
   onBack: () => void;
   onDeleted: () => void;
+  onEdit?: () => void;
 }
 
 export const TransactionDetailsPage: React.FC<TransactionDetailsPageProps> = ({
   transaction,
   onBack,
   onDeleted,
+  onEdit,
 }) => {
   const [isDeleting, setIsDeleting] = useState(false);
+  const [wallet, setWallet] = useState<Wallet | null>(null);
+  const [category, setCategory] = useState<Category | null>(null);
+
+  const walletId =
+    transaction.walletId || (transaction as any).wallet_id || undefined;
+  const categoryId =
+    transaction.categoryId || (transaction as any).category_id || undefined;
+
+  useEffect(() => {
+    async function loadAuxiliaryInfo() {
+      try {
+        if (walletId) {
+          try {
+            const w = await walletApi.getWalletById(walletId);
+            if (w) setWallet(w);
+          } catch {
+            const wallets = await walletApi.getWallets();
+            const found = wallets.find((item) => item.id === walletId);
+            if (found) setWallet(found);
+          }
+        }
+
+        if (categoryId) {
+          try {
+            const c = await categoryApi.getCategoryById(categoryId);
+            if (c) setCategory(c);
+          } catch {
+            const categories = await categoryApi.getCategories();
+            const found = categories.find((item) => item.id === categoryId);
+            if (found) setCategory(found);
+          }
+        }
+      } catch {}
+    }
+    loadAuxiliaryInfo();
+  }, [walletId, categoryId]);
 
   const isIncome =
     transaction.type === 'INCOME' || transaction.type === 'TRANSFER_IN';
@@ -69,9 +117,18 @@ export const TransactionDetailsPage: React.FC<TransactionDetailsPageProps> = ({
 
   return (
     <ScreenWrapper scrollable>
-      <Header title='Detalhes da Transação' onBack={onBack} />
+      <Header
+        title='Detalhes da Transação'
+        onBack={onBack}
+        rightAction={
+          onEdit ? (
+            <TouchableOpacity onPress={onEdit} style={styles.headerIconButton}>
+              <Pencil size={20} color={colors.primary} />
+            </TouchableOpacity>
+          ) : undefined
+        }
+      />
 
-      {/* Hero Card */}
       <Card variant='outlined' padding='lg' style={styles.heroCard}>
         <View style={styles.badgeWrapper}>{getTypeBadge()}</View>
 
@@ -87,11 +144,9 @@ export const TransactionDetailsPage: React.FC<TransactionDetailsPageProps> = ({
         <Text style={styles.title}>{transaction.title}</Text>
       </Card>
 
-      {/* Info List Card */}
       <Card variant='outlined' padding='lg' style={styles.infoCard}>
         <Text style={styles.sectionTitle}>Informações Gerais</Text>
 
-        {/* Date */}
         <View style={styles.infoRow}>
           <View style={styles.infoIconWrapper}>
             <Calendar size={18} color={colors.primary} />
@@ -106,7 +161,52 @@ export const TransactionDetailsPage: React.FC<TransactionDetailsPageProps> = ({
 
         <View style={styles.divider} />
 
-        {/* Installments */}
+        <View style={styles.infoRow}>
+          <View style={styles.infoIconWrapper}>
+            <WalletIcon size={18} color={colors.primary} />
+          </View>
+          <View style={styles.infoTextContainer}>
+            <Text style={styles.infoLabel}>Carteira / Conta</Text>
+            <Text style={styles.infoValue}>
+              {wallet ? wallet.name : walletId ? 'Carregando...' : 'Nenhuma'}
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.divider} />
+
+        <View style={styles.infoRow}>
+          <View style={styles.infoIconWrapper}>
+            <Tag
+              size={18}
+              color={
+                category?.color ||
+                (categoryId ? colors.primary : colors.textSecondary)
+              }
+            />
+          </View>
+          <View style={styles.infoTextContainer}>
+            <Text style={styles.infoLabel}>Categoria</Text>
+            {category ? (
+              <View style={styles.categoryNameRow}>
+                <View
+                  style={[
+                    styles.categoryDot,
+                    { backgroundColor: category.color || colors.primary },
+                  ]}
+                />
+                <Text style={styles.infoValue}>{category.name}</Text>
+              </View>
+            ) : (
+              <Text style={styles.infoValueMuted}>
+                {categoryId ? 'Carregando...' : 'Nenhuma'}
+              </Text>
+            )}
+          </View>
+        </View>
+
+        <View style={styles.divider} />
+
         {transaction.installmentNumber && (
           <>
             <View style={styles.infoRow}>
@@ -125,7 +225,6 @@ export const TransactionDetailsPage: React.FC<TransactionDetailsPageProps> = ({
           </>
         )}
 
-        {/* Identifier */}
         <View style={styles.infoRow}>
           <View style={styles.infoIconWrapper}>
             <Hash size={18} color={colors.textSecondary} />
@@ -139,22 +238,37 @@ export const TransactionDetailsPage: React.FC<TransactionDetailsPageProps> = ({
         </View>
       </Card>
 
-      {/* Delete Action */}
-      <Button
-        title='Excluir Transação'
-        variant='outline'
-        size='lg'
-        leftIcon={<Trash2 size={20} color={colors.expense} />}
-        textStyle={{ color: colors.expense }}
-        onPress={handleDelete}
-        loading={isDeleting}
-        style={styles.deleteButton}
-      />
+      <View style={styles.actionsContainer}>
+        {onEdit && (
+          <Button
+            title='Editar Transação'
+            variant='outline'
+            size='lg'
+            leftIcon={<Pencil size={20} color={colors.primary} />}
+            onPress={onEdit}
+            style={styles.editButton}
+          />
+        )}
+
+        <Button
+          title='Excluir Transação'
+          variant='outline'
+          size='lg'
+          leftIcon={<Trash2 size={20} color={colors.expense} />}
+          textStyle={{ color: colors.expense }}
+          onPress={handleDelete}
+          loading={isDeleting}
+          style={styles.deleteButton}
+        />
+      </View>
     </ScreenWrapper>
   );
 };
 
 const styles = StyleSheet.create({
+  headerIconButton: {
+    padding: spacing.xs,
+  },
   heroCard: {
     alignItems: 'center',
     marginVertical: spacing.md,
@@ -180,7 +294,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   infoCard: {
-    marginBottom: spacing.xl,
+    marginBottom: spacing.lg,
   },
   sectionTitle: {
     ...typography.subtitle,
@@ -222,13 +336,30 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
     marginTop: 2,
   },
+  categoryNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 2,
+  },
+  categoryDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+  },
   divider: {
     height: 1,
     backgroundColor: colors.divider,
     marginVertical: spacing.sm,
   },
+  actionsContainer: {
+    gap: spacing.sm,
+    marginBottom: spacing.xxl,
+  },
+  editButton: {
+    borderColor: colors.border,
+  },
   deleteButton: {
     borderColor: colors.expenseBorder,
-    marginBottom: spacing.xxl,
   },
 });

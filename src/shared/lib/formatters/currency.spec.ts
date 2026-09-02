@@ -8,14 +8,11 @@ import {
 
 describe('Currency Formatters', () => {
   it('should format cents to BRL currency string correctly', () => {
-    // Standard positive amount
     const formatted = formatCentsToBRL(15000);
     expect(formatted).toContain('150,00');
 
-    // Zero amount
     expect(formatCentsToBRL(0)).toContain('0,00');
 
-    // Fractional cents
     expect(formatCentsToBRL(1099)).toContain('10,99');
   });
 

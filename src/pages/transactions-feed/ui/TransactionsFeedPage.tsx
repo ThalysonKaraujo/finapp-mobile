@@ -4,6 +4,7 @@ import {
   ActivityIndicator,
   Alert,
   FlatList,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -36,6 +37,9 @@ export const TransactionsFeedPage: React.FC<TransactionsFeedPageProps> = ({
   const { user, signOut } = useAuthStore();
   const {
     transactions,
+    categories,
+    selectedCategoryId,
+    setSelectedCategoryId,
     isLoading,
     isRefreshing,
     filter,
@@ -67,7 +71,6 @@ export const TransactionsFeedPage: React.FC<TransactionsFeedPageProps> = ({
 
   return (
     <ScreenWrapper>
-      {/* Top Header */}
       <View style={styles.header}>
         <View style={styles.userInfo}>
           <View style={styles.avatar}>
@@ -90,7 +93,6 @@ export const TransactionsFeedPage: React.FC<TransactionsFeedPageProps> = ({
         </TouchableOpacity>
       </View>
 
-      {/* Main Content List */}
       <FlatList
         data={transactions}
         keyExtractor={(item) => item.id}
@@ -110,6 +112,72 @@ export const TransactionsFeedPage: React.FC<TransactionsFeedPageProps> = ({
             <View style={styles.feedHeader}>
               <Text style={styles.feedTitle}>Transações</Text>
               <FilterBar currentFilter={filter} onSelectFilter={setFilter} />
+
+              {categories.length > 0 && (
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.categoryFilterContainer}
+                >
+                  <TouchableOpacity
+                    onPress={() => setSelectedCategoryId(null)}
+                    style={[
+                      styles.categoryFilterPill,
+                      !selectedCategoryId
+                        ? styles.categoryFilterPillActive
+                        : styles.categoryFilterPillInactive,
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.categoryFilterText,
+                        !selectedCategoryId
+                          ? styles.categoryFilterTextActive
+                          : styles.categoryFilterTextInactive,
+                      ]}
+                    >
+                      Todas
+                    </Text>
+                  </TouchableOpacity>
+
+                  {categories.map((cat) => {
+                    const isSelected = selectedCategoryId === cat.id;
+                    return (
+                      <TouchableOpacity
+                        key={cat.id}
+                        onPress={() =>
+                          setSelectedCategoryId(isSelected ? null : cat.id)
+                        }
+                        style={[
+                          styles.categoryFilterPill,
+                          isSelected
+                            ? styles.categoryFilterPillActive
+                            : styles.categoryFilterPillInactive,
+                        ]}
+                      >
+                        {cat.color && (
+                          <View
+                            style={[
+                              styles.catDot,
+                              { backgroundColor: cat.color },
+                            ]}
+                          />
+                        )}
+                        <Text
+                          style={[
+                            styles.categoryFilterText,
+                            isSelected
+                              ? styles.categoryFilterTextActive
+                              : styles.categoryFilterTextInactive,
+                          ]}
+                        >
+                          {cat.name}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </ScrollView>
+              )}
             </View>
           </View>
         }
@@ -123,12 +191,20 @@ export const TransactionsFeedPage: React.FC<TransactionsFeedPageProps> = ({
               icon={<Receipt size={32} color={colors.primary} />}
               title='Nenhuma transação encontrada'
               description={
-                filter === 'ALL'
+                filter === 'ALL' && !selectedCategoryId
                   ? 'Você ainda não registrou movimentações. Toque no botão abaixo para adicionar sua primeira transação.'
                   : 'Nenhuma transação encontrada para este filtro.'
               }
-              actionTitle={filter === 'ALL' ? 'Nova Transação' : undefined}
-              onAction={filter === 'ALL' ? onNavigateToCreate : undefined}
+              actionTitle={
+                filter === 'ALL' && !selectedCategoryId
+                  ? 'Nova Transação'
+                  : undefined
+              }
+              onAction={
+                filter === 'ALL' && !selectedCategoryId
+                  ? onNavigateToCreate
+                  : undefined
+              }
             />
           )
         }
@@ -140,7 +216,6 @@ export const TransactionsFeedPage: React.FC<TransactionsFeedPageProps> = ({
         showsVerticalScrollIndicator={false}
       />
 
-      {/* Floating Action Button */}
       <TouchableOpacity
         activeOpacity={0.85}
         onPress={onNavigateToCreate}
@@ -208,6 +283,44 @@ const styles = StyleSheet.create({
   feedTitle: {
     ...typography.h3,
     color: colors.textPrimary,
+  },
+  categoryFilterContainer: {
+    gap: spacing.xs,
+    paddingVertical: spacing.xs,
+    marginBottom: spacing.xs,
+  },
+  categoryFilterPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: spacing.md,
+    paddingVertical: 6,
+    borderRadius: borderRadius.full,
+    borderWidth: 1,
+  },
+  categoryFilterPillActive: {
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
+  },
+  categoryFilterPillInactive: {
+    backgroundColor: colors.surface,
+    borderColor: colors.border,
+  },
+  categoryFilterText: {
+    ...typography.caption,
+    fontWeight: '600',
+    fontSize: 12,
+  },
+  categoryFilterTextActive: {
+    color: colors.surface,
+  },
+  categoryFilterTextInactive: {
+    color: colors.textSecondary,
+  },
+  catDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
   },
   listContent: {
     paddingBottom: 90,

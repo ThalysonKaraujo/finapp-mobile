@@ -51,7 +51,6 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({
         onChange(selectedDate);
       }
     } else {
-      // iOS
       if (selectedDate) {
         setTempDate(selectedDate);
       }
@@ -92,7 +91,6 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({
 
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
-      {/* Android Picker */}
       {showPicker && Platform.OS === 'android' && (
         <DateTimePicker
           value={value}
@@ -104,7 +102,6 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({
         />
       )}
 
-      {/* iOS Modal Picker */}
       {Platform.OS === 'ios' && (
         <Modal
           visible={showPicker}
@@ -186,7 +183,7 @@ const styles = StyleSheet.create({
     color: colors.expense,
     marginTop: spacing.xs,
   },
-  // iOS Modal Styles
+
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(10, 25, 47, 0.4)',

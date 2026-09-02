@@ -42,16 +42,13 @@ export const useAuthStore = create<AuthState>((set, _get) => ({
           isInitializing: false,
         });
 
-        // Background session revalidation
         try {
           const session = await authApi.getSession();
           if (session?.user) {
             appStorage.setObject(StorageKeys.USER_DATA, session.user);
             set({ user: session.user });
           }
-        } catch {
-          // Keep cached session if offline
-        }
+        } catch {}
       } else {
         set({ isInitializing: false });
       }

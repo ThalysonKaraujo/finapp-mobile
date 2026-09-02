@@ -1,15 +1,20 @@
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback, useMemo, useState } from 'react';
+import { Category, categoryApi } from '@/entities/category';
 import { Transaction, transactionApi } from '@/entities/transaction';
 
 export type TransactionFilter = 'ALL' | 'INCOME' | 'EXPENSE';
 
 export function useTransactionsFeed() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<TransactionFilter>('ALL');
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
+    null,
+  );
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [isBalanceVisible, setIsBalanceVisible] = useState(true);
@@ -24,12 +29,17 @@ export function useTransactionsFeed() {
       setError(null);
 
       try {
-        const response = await transactionApi.getTransactions(pageNum, 30);
+        const [response, catList] = await Promise.all([
+          transactionApi.getTransactions(pageNum, 30),
+          categoryApi.getCategories().catch(() => []),
+        ]);
+
         if (pageNum === 1) {
           setTransactions(response.data);
         } else {
           setTransactions((prev) => [...prev, ...response.data]);
         }
+        setCategories(catList);
         setHasMore(response.meta.page < response.meta.totalPages);
         setPage(pageNum);
       } catch (err: any) {
@@ -42,7 +52,6 @@ export function useTransactionsFeed() {
     [transactions.length],
   );
 
-  // Auto reload feed data whenever screen gains focus (e.g., returning from CreateTransaction modal)
   useFocusEffect(
     useCallback(() => {
       fetchTransactions(1);
@@ -60,15 +69,32 @@ export function useTransactionsFeed() {
   }, [isLoading, hasMore, page, fetchTransactions]);
 
   const filteredTransactions = useMemo(() => {
-    if (filter === 'ALL') return transactions;
     return transactions.filter((t) => {
-      if (filter === 'INCOME')
-        return t.type === 'INCOME' || t.type === 'TRANSFER_IN';
-      if (filter === 'EXPENSE')
-        return t.type === 'EXPENSE' || t.type === 'TRANSFER_OUT';
+      if (
+        filter === 'INCOME' &&
+        t.type !== 'INCOME' &&
+        t.type !== 'TRANSFER_IN'
+      ) {
+        return false;
+      }
+      if (
+        filter === 'EXPENSE' &&
+        t.type !== 'EXPENSE' &&
+        t.type !== 'TRANSFER_OUT'
+      ) {
+        return false;
+      }
+
+      if (selectedCategoryId) {
+        const catId = t.categoryId || (t as any).category_id || t.category?.id;
+        if (catId !== selectedCategoryId) {
+          return false;
+        }
+      }
+
       return true;
     });
-  }, [transactions, filter]);
+  }, [transactions, filter, selectedCategoryId]);
 
   const metrics = useMemo(() => {
     let totalIncome = 0;
@@ -98,6 +124,9 @@ export function useTransactionsFeed() {
   return {
     transactions: filteredTransactions,
     rawTransactions: transactions,
+    categories,
+    selectedCategoryId,
+    setSelectedCategoryId,
     isLoading,
     isRefreshing,
     error,
