@@ -7,6 +7,7 @@ import {
   AmountInput,
   Button,
   Card,
+  ColorPicker,
   DatePickerInput,
   Header,
   Input,
@@ -24,6 +25,7 @@ export const CreateObjectivePage: React.FC<CreateObjectivePageProps> = ({
 }) => {
   const [name, setName] = useState('');
   const [targetAmountCents, setTargetAmountCents] = useState(0);
+  const [selectedColor, setSelectedColor] = useState('#0066FF');
   const [deadline, setDeadline] = useState<Date>(
     new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
   );
@@ -35,6 +37,7 @@ export const CreateObjectivePage: React.FC<CreateObjectivePageProps> = ({
     const validation = CreateObjectiveSchema.safeParse({
       name: name.trim(),
       targetAmount: targetAmountCents,
+      color: selectedColor,
       deadline: deadline.toISOString(),
     });
 
@@ -81,6 +84,12 @@ export const CreateObjectivePage: React.FC<CreateObjectivePageProps> = ({
           onChangeText={setName}
           leftIcon={<Target size={20} color={colors.textSecondary} />}
           error={errors.name}
+        />
+
+        <ColorPicker
+          label='Cor de Identificação'
+          selectedColor={selectedColor}
+          onSelectColor={setSelectedColor}
         />
 
         <DatePickerInput

@@ -254,7 +254,10 @@ export const WalletsAndObjectivesPage: React.FC<
 
                 <ProgressBar
                   progress={percentage}
-                  color={percentage >= 100 ? colors.income : colors.primary}
+                  color={
+                    item.color ||
+                    (percentage >= 100 ? colors.income : colors.primary)
+                  }
                   height={8}
                 />
 
