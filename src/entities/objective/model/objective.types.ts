@@ -7,6 +7,7 @@ export const ObjectiveSchema = z.object({
   currentAmount: z.number().default(0),
   color: z.string().default('#0066FF'),
   deadline: z.string().nullable().optional(),
+  isCompleted: z.boolean().optional().default(false),
   userId: z.string().optional(),
   createdAt: z.string().optional(),
   updatedAt: z.string().optional(),
@@ -19,9 +20,11 @@ export const CreateObjectiveSchema = z.object({
   targetAmount: z.number().positive('O valor alvo deve ser maior que zero'),
   color: z.string().default('#0066FF'),
   deadline: z.string().optional(),
+  isCompleted: z.boolean().optional(),
 });
 
 export type CreateObjectiveInput = z.infer<typeof CreateObjectiveSchema>;
+export type UpdateObjectiveInput = Partial<CreateObjectiveInput>;
 
 export const DepositWithdrawSchema = z.object({
   amount: z.number().positive('O valor deve ser maior que zero'),

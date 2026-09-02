@@ -3,6 +3,7 @@ import {
   CreateObjectiveInput,
   DepositWithdrawInput,
   Objective,
+  UpdateObjectiveInput,
 } from '../model/objective.types';
 
 export const objectiveApi = {
@@ -24,6 +25,33 @@ export const objectiveApi = {
     const response = await apiClient.post<Objective>(
       ENDPOINTS.OBJECTIVES.CREATE,
       data,
+    );
+    return response.data;
+  },
+
+  updateObjective: async (
+    id: string,
+    data: UpdateObjectiveInput,
+  ): Promise<Objective> => {
+    const response = await apiClient.patch<Objective>(
+      ENDPOINTS.OBJECTIVES.UPDATE(id),
+      data,
+    );
+    return response.data;
+  },
+
+  finalizeObjective: async (id: string): Promise<Objective> => {
+    const response = await apiClient.patch<Objective>(
+      ENDPOINTS.OBJECTIVES.UPDATE(id),
+      { isCompleted: true },
+    );
+    return response.data;
+  },
+
+  reopenObjective: async (id: string): Promise<Objective> => {
+    const response = await apiClient.patch<Objective>(
+      ENDPOINTS.OBJECTIVES.UPDATE(id),
+      { isCompleted: false },
     );
     return response.data;
   },

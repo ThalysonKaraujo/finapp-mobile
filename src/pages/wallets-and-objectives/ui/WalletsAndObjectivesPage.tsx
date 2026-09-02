@@ -3,12 +3,16 @@ import {
   ArrowDownLeft,
   ArrowRightLeft,
   ArrowUpRight,
+  CheckCircle2,
+  RotateCcw,
   Target,
+  Trash2,
   Wallet as WalletIcon,
 } from 'lucide-react-native';
 import React, { useCallback, useState } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   FlatList,
   StyleSheet,
   Text,
@@ -26,6 +30,7 @@ import {
   typography,
 } from '@/shared/theme';
 import {
+  Badge,
   Button,
   Card,
   EmptyState,
@@ -55,6 +60,9 @@ export const WalletsAndObjectivesPage: React.FC<
   const [activeTab, setActiveTab] = useState<'WALLETS' | 'OBJECTIVES'>(
     'WALLETS',
   );
+  const [objectivesSubTab, setObjectivesSubTab] = useState<
+    'ACTIVE' | 'COMPLETED'
+  >('ACTIVE');
   const [wallets, setWallets] = useState<Wallet[]>([]);
   const [objectives, setObjectives] = useState<Objective[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -92,6 +100,87 @@ export const WalletsAndObjectivesPage: React.FC<
     (acc, o) => acc + o.currentAmount,
     0,
   );
+
+  const activeObjectives = objectives.filter((o) => !o.isCompleted);
+  const completedObjectives = objectives.filter((o) => o.isCompleted);
+  const currentObjectivesList =
+    objectivesSubTab === 'ACTIVE' ? activeObjectives : completedObjectives;
+
+  const handleFinalizeObjective = (item: Objective) => {
+    Alert.alert(
+      'Finalizar Meta 🎉',
+      `Deseja marcar a meta "${item.name}" como concluída? Ela será movida para a aba de Concluídas.`,
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Sim, Finalizar',
+          style: 'default',
+          onPress: async () => {
+            try {
+              await objectiveApi.finalizeObjective(item.id);
+              setObjectives((prev) =>
+                prev.map((o) =>
+                  o.id === item.id ? { ...o, isCompleted: true } : o,
+                ),
+              );
+              Alert.alert('Parabéns! 🚀', `A meta "${item.name}" foi concluída com sucesso!`);
+            } catch {
+              Alert.alert('Erro', 'Não foi possível finalizar a meta.');
+            }
+          },
+        },
+      ],
+    );
+  };
+
+  const handleReopenObjective = (item: Objective) => {
+    Alert.alert(
+      'Reabrir Meta',
+      `Deseja reabrir a meta "${item.name}" para a aba Em Andamento?`,
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Reabrir',
+          onPress: async () => {
+            try {
+              await objectiveApi.reopenObjective(item.id);
+              setObjectives((prev) =>
+                prev.map((o) =>
+                  o.id === item.id ? { ...o, isCompleted: false } : o,
+                ),
+              );
+              Alert.alert('Sucesso', `A meta "${item.name}" foi reaberta!`);
+            } catch {
+              Alert.alert('Erro', 'Não foi possível reabrir a meta.');
+            }
+          },
+        },
+      ],
+    );
+  };
+
+  const handleDeleteObjective = (item: Objective) => {
+    Alert.alert(
+      'Excluir Meta',
+      `Tem certeza que deseja excluir a meta "${item.name}"?`,
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Excluir',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await objectiveApi.deleteObjective(item.id);
+              setObjectives((prev) => prev.filter((o) => o.id !== item.id));
+              Alert.alert('Sucesso', 'Meta excluída com sucesso.');
+            } catch {
+              Alert.alert('Erro', 'Não foi possível excluir a meta.');
+            }
+          },
+        },
+      ],
+    );
+  };
 
   return (
     <ScreenWrapper>
@@ -192,6 +281,47 @@ export const WalletsAndObjectivesPage: React.FC<
         </View>
       </Card>
 
+      {activeTab === 'OBJECTIVES' && (
+        <View style={styles.subTabContainer}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => setObjectivesSubTab('ACTIVE')}
+            style={[
+              styles.subTabButton,
+              objectivesSubTab === 'ACTIVE' && styles.subTabButtonActive,
+            ]}
+          >
+            <Text
+              style={[
+                styles.subTabButtonText,
+                objectivesSubTab === 'ACTIVE' && styles.subTabButtonTextActive,
+              ]}
+            >
+              Em Andamento ({activeObjectives.length})
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => setObjectivesSubTab('COMPLETED')}
+            style={[
+              styles.subTabButton,
+              objectivesSubTab === 'COMPLETED' && styles.subTabButtonActive,
+            ]}
+          >
+            <Text
+              style={[
+                styles.subTabButtonText,
+                objectivesSubTab === 'COMPLETED' &&
+                  styles.subTabButtonTextActive,
+              ]}
+            >
+              Concluídas ({completedObjectives.length})
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
       {isLoading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size='large' color={colors.primary} />
@@ -231,7 +361,7 @@ export const WalletsAndObjectivesPage: React.FC<
         />
       ) : (
         <FlatList
-          data={objectives}
+          data={currentObjectivesList}
           keyExtractor={(item) => item.id}
           refreshing={isRefreshing}
           onRefresh={() => loadData(true)}
@@ -241,18 +371,45 @@ export const WalletsAndObjectivesPage: React.FC<
             const percentage = Math.round(
               (item.currentAmount / item.targetAmount) * 100,
             );
+            const isDone = item.isCompleted || percentage >= 100;
+
             return (
-              <Card variant='outlined' padding='md' style={styles.itemCard}>
+              <Card
+                variant='outlined'
+                padding='md'
+                style={[
+                  styles.itemCard,
+                  item.isCompleted && styles.completedItemCard,
+                ]}
+              >
                 <View style={styles.objectiveHeader}>
-                  <Text style={styles.objectiveTitle}>{item.name}</Text>
-                  <Text style={styles.objectivePercentage}>{percentage}%</Text>
+                  <View style={styles.titleRow}>
+                    <Text style={styles.objectiveTitle}>{item.name}</Text>
+                    {item.isCompleted && (
+                      <Badge
+                        label='Concluída 🎉'
+                        variant='income'
+                        style={styles.completedBadge}
+                      />
+                    )}
+                  </View>
+                  <Text
+                    style={[
+                      styles.objectivePercentage,
+                      item.isCompleted && { color: colors.income },
+                    ]}
+                  >
+                    {percentage}%
+                  </Text>
                 </View>
 
                 <ProgressBar
-                  progress={percentage}
+                  progress={item.isCompleted ? 100 : percentage}
                   color={
-                    item.color ||
-                    (percentage >= 100 ? colors.income : colors.primary)
+                    item.isCompleted
+                      ? colors.income
+                      : item.color ||
+                        (percentage >= 100 ? colors.income : colors.primary)
                   }
                   height={8}
                 />
@@ -272,36 +429,88 @@ export const WalletsAndObjectivesPage: React.FC<
                   </Text>
                 )}
 
-                <View style={styles.objectiveActionsRow}>
-                  <TouchableOpacity
-                    style={[styles.actionBtn, styles.depositBtn]}
-                    onPress={() => onNavigateToDepositWithdraw(item, 'DEPOSIT')}
-                  >
-                    <ArrowDownLeft size={16} color={colors.income} />
-                    <Text style={styles.depositText}>Depositar</Text>
-                  </TouchableOpacity>
+                {item.isCompleted ? (
+                  <View style={styles.objectiveActionsRow}>
+                    <TouchableOpacity
+                      style={[styles.actionBtn, styles.reopenBtn]}
+                      onPress={() => handleReopenObjective(item)}
+                    >
+                      <RotateCcw size={15} color={colors.primary} />
+                      <Text style={styles.reopenText}>Reabrir Meta</Text>
+                    </TouchableOpacity>
 
-                  <TouchableOpacity
-                    style={[styles.actionBtn, styles.withdrawBtn]}
-                    onPress={() =>
-                      onNavigateToDepositWithdraw(item, 'WITHDRAW')
-                    }
-                  >
-                    <ArrowUpRight size={16} color={colors.expense} />
-                    <Text style={styles.withdrawText}>Resgatar</Text>
-                  </TouchableOpacity>
-                </View>
+                    <TouchableOpacity
+                      style={[styles.actionBtn, styles.deleteBtn]}
+                      onPress={() => handleDeleteObjective(item)}
+                    >
+                      <Trash2 size={15} color={colors.expense} />
+                      <Text style={styles.deleteText}>Excluir</Text>
+                    </TouchableOpacity>
+                  </View>
+                ) : (
+                  <View style={styles.objectiveActionsRow}>
+                    <TouchableOpacity
+                      style={[styles.actionBtn, styles.depositBtn]}
+                      onPress={() =>
+                        onNavigateToDepositWithdraw(item, 'DEPOSIT')
+                      }
+                    >
+                      <ArrowDownLeft size={16} color={colors.income} />
+                      <Text style={styles.depositText}>Depositar</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      style={[styles.actionBtn, styles.withdrawBtn]}
+                      onPress={() =>
+                        onNavigateToDepositWithdraw(item, 'WITHDRAW')
+                      }
+                    >
+                      <ArrowUpRight size={16} color={colors.expense} />
+                      <Text style={styles.withdrawText}>Resgatar</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      style={[
+                        styles.actionBtn,
+                        styles.finalizeBtn,
+                        isDone && styles.finalizeBtnHighlight,
+                      ]}
+                      onPress={() => handleFinalizeObjective(item)}
+                    >
+                      <CheckCircle2
+                        size={16}
+                        color={isDone ? colors.surface : colors.income}
+                      />
+                      <Text
+                        style={[
+                          styles.finalizeText,
+                          isDone && styles.finalizeTextHighlight,
+                        ]}
+                      >
+                        Finalizar
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
               </Card>
             );
           }}
           ListEmptyComponent={
-            <EmptyState
-              icon={<Target size={32} color={colors.primary} />}
-              title='Nenhuma meta cadastrada'
-              description='Defina metas de poupança (ex: Viagem, Carro Novo) e acompanhe seu progresso.'
-              actionTitle='Criar Primeira Meta'
-              onAction={onNavigateToCreateObjective}
-            />
+            objectivesSubTab === 'ACTIVE' ? (
+              <EmptyState
+                icon={<Target size={32} color={colors.primary} />}
+                title='Nenhuma meta em andamento'
+                description='Defina metas de poupança (ex: Viagem, Carro Novo) e acompanhe seu progresso.'
+                actionTitle='Criar Primeira Meta'
+                onAction={onNavigateToCreateObjective}
+              />
+            ) : (
+              <EmptyState
+                icon={<CheckCircle2 size={32} color={colors.income} />}
+                title='Nenhuma meta concluída'
+                description='Quando você concluir ou finalizar uma meta financeira, ela aparecerá aqui no seu histórico de conquistas!'
+              />
+            )
           }
         />
       )}
@@ -336,6 +545,33 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   tabButtonTextActive: {
+    color: colors.primary,
+    fontWeight: '700',
+  },
+  subTabContainer: {
+    flexDirection: 'row',
+    backgroundColor: colors.surfaceSubtle,
+    borderRadius: borderRadius.md,
+    padding: 3,
+    marginBottom: spacing.md,
+  },
+  subTabButton: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: spacing.xs + 2,
+    borderRadius: borderRadius.sm,
+  },
+  subTabButtonActive: {
+    backgroundColor: colors.surface,
+    ...shadows.sm,
+  },
+  subTabButtonText: {
+    ...typography.caption,
+    color: colors.textSecondary,
+    fontWeight: '600',
+  },
+  subTabButtonTextActive: {
     color: colors.primary,
     fontWeight: '700',
   },
@@ -374,6 +610,10 @@ const styles = StyleSheet.create({
   itemCard: {
     marginBottom: spacing.sm,
   },
+  completedItemCard: {
+    borderColor: colors.incomeBorder,
+    backgroundColor: colors.surface,
+  },
   walletRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -405,6 +645,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: spacing.xs,
+  },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    flex: 1,
+    flexWrap: 'wrap',
+  },
+  completedBadge: {
+    marginLeft: 4,
   },
   objectiveTitle: {
     ...typography.subtitle,
@@ -438,7 +688,7 @@ const styles = StyleSheet.create({
   },
   objectiveActionsRow: {
     flexDirection: 'row',
-    gap: spacing.sm,
+    gap: spacing.xs,
     marginTop: spacing.md,
     borderTopWidth: 1,
     borderTopColor: colors.divider,
@@ -465,6 +715,40 @@ const styles = StyleSheet.create({
     backgroundColor: colors.expenseBackground,
   },
   withdrawText: {
+    ...typography.caption,
+    color: colors.expense,
+    fontWeight: '700',
+  },
+  finalizeBtn: {
+    backgroundColor: colors.incomeBackground,
+    borderWidth: 1,
+    borderColor: colors.incomeBorder,
+  },
+  finalizeBtnHighlight: {
+    backgroundColor: colors.income,
+    borderColor: colors.income,
+  },
+  finalizeText: {
+    ...typography.caption,
+    color: colors.income,
+    fontWeight: '700',
+  },
+  finalizeTextHighlight: {
+    color: colors.surface,
+    fontWeight: '800',
+  },
+  reopenBtn: {
+    backgroundColor: colors.primarySubtle,
+  },
+  reopenText: {
+    ...typography.caption,
+    color: colors.primary,
+    fontWeight: '700',
+  },
+  deleteBtn: {
+    backgroundColor: colors.expenseBackground,
+  },
+  deleteText: {
     ...typography.caption,
     color: colors.expense,
     fontWeight: '700',
