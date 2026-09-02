@@ -30,9 +30,33 @@ export const ENDPOINTS = {
     LIST: '/wallets',
     CREATE: '/wallets',
     DETAIL: (id: string) => `/wallets/${id}`,
+    UPDATE: (id: string) => `/wallets/${id}`,
+    DELETE: (id: string) => `/wallets/${id}`,
   },
   CATEGORIES: {
     LIST: '/categories',
     CREATE: '/categories',
+    DETAIL: (id: string) => `/categories/${id}`,
+    UPDATE: (id: string) => `/categories/${id}`,
+    DELETE: (id: string) => `/categories/${id}`,
+  },
+  OBJECTIVES: {
+    LIST: '/objectives',
+    CREATE: '/objectives',
+    DETAIL: (id: string) => `/objectives/${id}`,
+    UPDATE: (id: string) => `/objectives/${id}`,
+    DELETE: (id: string) => `/objectives/${id}`,
+    DEPOSIT: (id: string) => `/objectives/${id}/deposit`,
+    WITHDRAW: (id: string) => `/objectives/${id}/withdraw`,
+  },
+  REPORTS: {
+    MONTHLY: '/reports/monthly',
+  },
+  BUDGETS: {
+    LIST: '/budgets',
+    CREATE: '/budgets',
+    DETAIL: (id: string) => `/budgets/${id}`,
+    UPDATE: (id: string) => `/budgets/${id}`,
+    DELETE: (id: string) => `/budgets/${id}`,
   },
 } as const;
