@@ -5,6 +5,7 @@ import { CreateObjectivePage } from '@/pages/create-objective';
 import { CreateTransactionPage } from '@/pages/create-transaction';
 import { CreateWalletPage } from '@/pages/create-wallet';
 import { DepositWithdrawObjectivePage } from '@/pages/deposit-withdraw-objective';
+import { EditTransactionPage } from '@/pages/edit-transaction';
 import { TransactionDetailsPage } from '@/pages/transaction-details';
 import { TransferPage } from '@/pages/transfer';
 import { BottomTabNavigator } from './BottomTabNavigator';
@@ -34,6 +35,25 @@ export const AppNavigator: React.FC = () => {
           <CreateTransactionPage
             onBack={() => navigation.goBack()}
             onSuccess={() => navigation.goBack()}
+          />
+        )}
+      </Stack.Screen>
+
+      <Stack.Screen
+        name='EditTransaction'
+        options={{
+          presentation: 'modal',
+          animation: 'slide_from_bottom',
+        }}
+      >
+        {({ navigation, route }) => (
+          <EditTransactionPage
+            transaction={route.params.transaction}
+            onBack={() => navigation.goBack()}
+            onSuccess={() => {
+              navigation.goBack();
+              navigation.goBack(); // Go back to the feed list so it refreshes
+            }}
           />
         )}
       </Stack.Screen>
@@ -121,6 +141,11 @@ export const AppNavigator: React.FC = () => {
             transaction={route.params.transaction}
             onBack={() => navigation.goBack()}
             onDeleted={() => navigation.goBack()}
+            onEdit={() =>
+              navigation.navigate('EditTransaction', {
+                transaction: route.params.transaction,
+              })
+            }
           />
         )}
       </Stack.Screen>

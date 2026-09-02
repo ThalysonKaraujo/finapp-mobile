@@ -40,6 +40,14 @@ export const CreateTransactionSchema = z.object({
 
 export type CreateTransactionInput = z.infer<typeof CreateTransactionSchema>;
 
+export const UpdateTransactionSchema = CreateTransactionSchema.partial().extend(
+  {
+    updateFutureInstallments: z.boolean().optional(),
+  },
+);
+
+export type UpdateTransactionInput = z.infer<typeof UpdateTransactionSchema>;
+
 export const TransferTransactionSchema = z
   .object({
     sourceWalletId: z.string().min(1, 'Selecione a carteira de origem'),

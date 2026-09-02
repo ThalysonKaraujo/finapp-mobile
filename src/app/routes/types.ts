@@ -15,6 +15,7 @@ export type AppTabParamList = {
 export type AppStackParamList = {
   MainTabs: undefined;
   CreateTransaction: undefined;
+  EditTransaction: { transaction: Transaction };
   CreateWallet: undefined;
   CreateCategory: undefined;
   CreateObjective: undefined;

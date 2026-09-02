@@ -4,6 +4,7 @@ import {
   PaginatedTransactionsResponse,
   Transaction,
   TransferTransactionInput,
+  UpdateTransactionInput,
 } from '../model/transaction.types';
 
 export const transactionApi = {
@@ -32,6 +33,17 @@ export const transactionApi = {
   ): Promise<Transaction> => {
     const response = await apiClient.post<Transaction>(
       ENDPOINTS.TRANSACTIONS.CREATE,
+      data,
+    );
+    return response.data;
+  },
+
+  updateTransaction: async (
+    id: string,
+    data: UpdateTransactionInput,
+  ): Promise<Transaction> => {
+    const response = await apiClient.put<Transaction>(
+      ENDPOINTS.TRANSACTIONS.UPDATE(id),
       data,
     );
     return response.data;

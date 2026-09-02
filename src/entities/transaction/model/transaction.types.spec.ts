@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   CreateTransactionSchema,
   TransactionSchema,
+  UpdateTransactionSchema,
 } from './transaction.types';
 
 describe('Transaction Schemas Validation', () => {
@@ -63,5 +64,15 @@ describe('Transaction Schemas Validation', () => {
         'O título deve ter pelo menos 2 caracteres',
       );
     }
+  });
+
+  it('should validate partial UpdateTransactionSchema', () => {
+    const validPartialInput = {
+      title: 'Novo Título',
+      updateFutureInstallments: true,
+    };
+
+    const result = UpdateTransactionSchema.safeParse(validPartialInput);
+    expect(result.success).toBe(true);
   });
 });

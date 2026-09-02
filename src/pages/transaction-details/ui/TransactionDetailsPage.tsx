@@ -2,12 +2,13 @@ import {
   Calendar,
   Hash,
   Layers,
+  Pencil,
   Tag,
   Trash2,
   Wallet as WalletIcon,
 } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
-import { Alert, StyleSheet, Text, View } from 'react-native';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Category, categoryApi } from '@/entities/category';
 import { Transaction, transactionApi } from '@/entities/transaction';
 import { Wallet, walletApi } from '@/entities/wallet';
@@ -19,12 +20,14 @@ interface TransactionDetailsPageProps {
   transaction: Transaction;
   onBack: () => void;
   onDeleted: () => void;
+  onEdit?: () => void;
 }
 
 export const TransactionDetailsPage: React.FC<TransactionDetailsPageProps> = ({
   transaction,
   onBack,
   onDeleted,
+  onEdit,
 }) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [wallet, setWallet] = useState<Wallet | null>(null);
@@ -111,7 +114,17 @@ export const TransactionDetailsPage: React.FC<TransactionDetailsPageProps> = ({
 
   return (
     <ScreenWrapper scrollable>
-      <Header title='Detalhes da Transação' onBack={onBack} />
+      <Header
+        title='Detalhes da Transação'
+        onBack={onBack}
+        rightAction={
+          onEdit ? (
+            <TouchableOpacity onPress={onEdit} style={styles.headerIconButton}>
+              <Pencil size={20} color={colors.primary} />
+            </TouchableOpacity>
+          ) : undefined
+        }
+      />
 
       {/* Hero Card */}
       <Card variant='outlined' padding='lg' style={styles.heroCard}>
@@ -220,22 +233,38 @@ export const TransactionDetailsPage: React.FC<TransactionDetailsPageProps> = ({
         </View>
       </Card>
 
-      {/* Delete Action */}
-      <Button
-        title='Excluir Transação'
-        variant='outline'
-        size='lg'
-        leftIcon={<Trash2 size={20} color={colors.expense} />}
-        textStyle={{ color: colors.expense }}
-        onPress={handleDelete}
-        loading={isDeleting}
-        style={styles.deleteButton}
-      />
+      {/* Action Buttons */}
+      <View style={styles.actionsContainer}>
+        {onEdit && (
+          <Button
+            title='Editar Transação'
+            variant='outline'
+            size='lg'
+            leftIcon={<Pencil size={20} color={colors.primary} />}
+            onPress={onEdit}
+            style={styles.editButton}
+          />
+        )}
+
+        <Button
+          title='Excluir Transação'
+          variant='outline'
+          size='lg'
+          leftIcon={<Trash2 size={20} color={colors.expense} />}
+          textStyle={{ color: colors.expense }}
+          onPress={handleDelete}
+          loading={isDeleting}
+          style={styles.deleteButton}
+        />
+      </View>
     </ScreenWrapper>
   );
 };
 
 const styles = StyleSheet.create({
+  headerIconButton: {
+    padding: spacing.xs,
+  },
   heroCard: {
     alignItems: 'center',
     marginVertical: spacing.md,
@@ -261,7 +290,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   infoCard: {
-    marginBottom: spacing.xl,
+    marginBottom: spacing.lg,
   },
   sectionTitle: {
     ...typography.subtitle,
@@ -319,8 +348,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.divider,
     marginVertical: spacing.sm,
   },
+  actionsContainer: {
+    gap: spacing.sm,
+    marginBottom: spacing.xxl,
+  },
+  editButton: {
+    borderColor: colors.border,
+  },
   deleteButton: {
     borderColor: colors.expenseBorder,
-    marginBottom: spacing.xxl,
   },
 });
