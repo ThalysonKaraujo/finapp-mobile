@@ -1,3 +1,7 @@
+import DateTimePicker, {
+  DateTimePickerEvent,
+} from '@react-native-community/datetimepicker';
+import { Calendar } from 'lucide-react-native';
 import React, { useState } from 'react';
 import {
   Modal,
@@ -9,12 +13,14 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import DateTimePicker, {
-  DateTimePickerEvent,
-} from '@react-native-community/datetimepicker';
-import { Calendar } from 'lucide-react-native';
 import { formatDateShort } from '../../lib';
-import { borderRadius, colors, shadows, spacing, typography } from '../../theme';
+import {
+  borderRadius,
+  colors,
+  shadows,
+  spacing,
+  typography,
+} from '../../theme';
 
 export interface DatePickerInputProps {
   label?: string;
@@ -90,8 +96,8 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({
       {showPicker && Platform.OS === 'android' && (
         <DateTimePicker
           value={value}
-          mode="date"
-          display="default"
+          mode='date'
+          display='default'
           onChange={handleChange}
           minimumDate={minimumDate}
           maximumDate={maximumDate}
@@ -103,7 +109,7 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({
         <Modal
           visible={showPicker}
           transparent
-          animationType="fade"
+          animationType='fade'
           onRequestClose={handleCancelIOS}
         >
           <TouchableOpacity
@@ -128,13 +134,13 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({
 
               <DateTimePicker
                 value={tempDate}
-                mode="date"
-                display="spinner"
+                mode='date'
+                display='spinner'
                 onChange={handleChange}
                 textColor={colors.textPrimary}
                 minimumDate={minimumDate}
                 maximumDate={maximumDate}
-                locale="pt-BR"
+                locale='pt-BR'
               />
             </TouchableOpacity>
           </TouchableOpacity>

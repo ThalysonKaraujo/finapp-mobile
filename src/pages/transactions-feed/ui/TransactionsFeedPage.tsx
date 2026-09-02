@@ -1,3 +1,4 @@
+import { LogOut, Plus, Receipt } from 'lucide-react-native';
 import React from 'react';
 import {
   ActivityIndicator,
@@ -8,11 +9,16 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { LogOut, Plus, Receipt } from 'lucide-react-native';
-import { useAuthStore } from '@/features/auth';
 import { Transaction } from '@/entities/transaction';
+import { useAuthStore } from '@/features/auth';
+import {
+  borderRadius,
+  colors,
+  shadows,
+  spacing,
+  typography,
+} from '@/shared/theme';
 import { EmptyState, ScreenWrapper } from '@/shared/ui';
-import { borderRadius, colors, shadows, spacing, typography } from '@/shared/theme';
 import { useTransactionsFeed } from '../model/useTransactionsFeed';
 import { BalanceCard } from './BalanceCard';
 import { FilterBar } from './FilterBar';
@@ -89,10 +95,7 @@ export const TransactionsFeedPage: React.FC<TransactionsFeedPageProps> = ({
         data={transactions}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <TransactionItem
-            transaction={item}
-            onPress={onSelectTransaction}
-          />
+          <TransactionItem transaction={item} onPress={onSelectTransaction} />
         )}
         ListHeaderComponent={
           <View>
@@ -113,12 +116,12 @@ export const TransactionsFeedPage: React.FC<TransactionsFeedPageProps> = ({
         ListEmptyComponent={
           isLoading ? (
             <View style={styles.loadingContainer}>
-              <ActivityIndicator size="large" color={colors.primary} />
+              <ActivityIndicator size='large' color={colors.primary} />
             </View>
           ) : (
             <EmptyState
               icon={<Receipt size={32} color={colors.primary} />}
-              title="Nenhuma transação encontrada"
+              title='Nenhuma transação encontrada'
               description={
                 filter === 'ALL'
                   ? 'Você ainda não registrou movimentações. Toque no botão abaixo para adicionar sua primeira transação.'

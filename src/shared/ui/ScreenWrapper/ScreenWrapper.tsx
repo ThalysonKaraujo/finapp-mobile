@@ -38,7 +38,7 @@ export const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
     <ScrollView
       style={styles.flex}
       contentContainerStyle={[styles.scrollContent, contentContainerStyle]}
-      keyboardShouldPersistTaps="handled"
+      keyboardShouldPersistTaps='handled'
       showsVerticalScrollIndicator={false}
       refreshControl={
         onRefresh ? (
@@ -72,7 +72,7 @@ export const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor }, style]}>
-      <StatusBar barStyle="dark-content" backgroundColor={backgroundColor} />
+      <StatusBar barStyle='dark-content' backgroundColor={backgroundColor} />
       {container}
     </SafeAreaView>
   );

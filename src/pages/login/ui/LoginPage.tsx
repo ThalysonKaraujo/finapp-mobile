@@ -1,18 +1,9 @@
-import React, { useState } from 'react';
-import {
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
 import { Lock, Mail, ShieldCheck, Wallet } from 'lucide-react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { LoginSchema, useAuthStore } from '@/features/auth';
-import { Button, Card, Input, ScreenWrapper } from '@/shared/ui';
 import { borderRadius, colors, spacing, typography } from '@/shared/theme';
+import { Button, Card, Input, ScreenWrapper } from '@/shared/ui';
 
 interface LoginPageProps {
   onNavigateToRegister: () => void;
@@ -23,7 +14,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>(
+    {},
+  );
 
   const { signIn, isLoading, error, clearError } = useAuthStore();
 
@@ -44,7 +37,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
     try {
       await signIn(email.trim(), password);
-    } catch (err: any) {
+    } catch (_err: any) {
       // Error handled by store
     }
   };
@@ -64,7 +57,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
         </View>
 
         {/* Login Card */}
-        <Card variant="outlined" padding="lg" style={styles.card}>
+        <Card variant='outlined' padding='lg' style={styles.card}>
           <Text style={styles.formTitle}>Acesse sua conta</Text>
 
           {error && (
@@ -74,27 +67,29 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           )}
 
           <Input
-            label="E-mail"
-            placeholder="seu.email@exemplo.com"
+            label='E-mail'
+            placeholder='seu.email@exemplo.com'
             value={email}
             onChangeText={(text) => {
               setEmail(text);
-              if (errors.email) setErrors((prev) => ({ ...prev, email: undefined }));
+              if (errors.email)
+                setErrors((prev) => ({ ...prev, email: undefined }));
             }}
-            keyboardType="email-address"
-            autoCapitalize="none"
+            keyboardType='email-address'
+            autoCapitalize='none'
             autoCorrect={false}
             leftIcon={<Mail size={20} color={colors.textSecondary} />}
             error={errors.email}
           />
 
           <Input
-            label="Senha"
-            placeholder="Digite sua senha"
+            label='Senha'
+            placeholder='Digite sua senha'
             value={password}
             onChangeText={(text) => {
               setPassword(text);
-              if (errors.password) setErrors((prev) => ({ ...prev, password: undefined }));
+              if (errors.password)
+                setErrors((prev) => ({ ...prev, password: undefined }));
             }}
             isPassword
             leftIcon={<Lock size={20} color={colors.textSecondary} />}
@@ -102,10 +97,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           />
 
           <Button
-            title="Entrar"
+            title='Entrar'
             onPress={handleLogin}
             loading={isLoading}
-            size="lg"
+            size='lg'
             style={styles.submitButton}
           />
         </Card>
@@ -113,7 +108,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({
         {/* Register CTA */}
         <View style={styles.footer}>
           <Text style={styles.footerText}>Não tem uma conta?</Text>
-          <TouchableOpacity onPress={onNavigateToRegister} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+          <TouchableOpacity
+            onPress={onNavigateToRegister}
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          >
             <Text style={styles.registerLink}> Criar conta</Text>
           </TouchableOpacity>
         </View>
@@ -121,7 +119,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({
         {/* Security badge */}
         <View style={styles.securityBadge}>
           <ShieldCheck size={16} color={colors.textMuted} />
-          <Text style={styles.securityText}>Conexão criptografada de ponta a ponta</Text>
+          <Text style={styles.securityText}>
+            Conexão criptografada de ponta a ponta
+          </Text>
         </View>
       </View>
     </ScreenWrapper>

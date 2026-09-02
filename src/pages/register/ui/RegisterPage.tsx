@@ -1,15 +1,9 @@
-import React, { useState } from 'react';
-import {
-  Alert,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
 import { Lock, Mail, User as UserIcon } from 'lucide-react-native';
+import React, { useState } from 'react';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { RegisterSchema, useAuthStore } from '@/features/auth';
-import { Button, Card, Header, Input, ScreenWrapper } from '@/shared/ui';
 import { borderRadius, colors, spacing, typography } from '@/shared/theme';
+import { Button, Card, Header, Input, ScreenWrapper } from '@/shared/ui';
 
 interface RegisterPageProps {
   onNavigateToLogin: () => void;
@@ -58,14 +52,14 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({
           [{ text: 'Ir para o Login', onPress: onNavigateToLogin }],
         );
       }
-    } catch (err: any) {
+    } catch (_err: any) {
       // Error handled by store
     }
   };
 
   return (
     <ScreenWrapper backgroundColor={colors.surface} scrollable>
-      <Header title="" onBack={onNavigateToLogin} />
+      <Header title='' onBack={onNavigateToLogin} />
 
       <View style={styles.container}>
         <View style={styles.header}>
@@ -75,7 +69,7 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({
           </Text>
         </View>
 
-        <Card variant="outlined" padding="lg" style={styles.card}>
+        <Card variant='outlined' padding='lg' style={styles.card}>
           {error && (
             <View style={styles.errorBanner}>
               <Text style={styles.errorBannerText}>{error}</Text>
@@ -83,40 +77,41 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({
           )}
 
           <Input
-            label="Nome completo"
-            placeholder="Como quer ser chamado?"
+            label='Nome completo'
+            placeholder='Como quer ser chamado?'
             value={name}
             onChangeText={(text) => {
               setName(text);
               if (errors.name) setErrors((prev) => ({ ...prev, name: '' }));
             }}
-            autoCapitalize="words"
+            autoCapitalize='words'
             leftIcon={<UserIcon size={20} color={colors.textSecondary} />}
             error={errors.name}
           />
 
           <Input
-            label="E-mail"
-            placeholder="seu.email@exemplo.com"
+            label='E-mail'
+            placeholder='seu.email@exemplo.com'
             value={email}
             onChangeText={(text) => {
               setEmail(text);
               if (errors.email) setErrors((prev) => ({ ...prev, email: '' }));
             }}
-            keyboardType="email-address"
-            autoCapitalize="none"
+            keyboardType='email-address'
+            autoCapitalize='none'
             autoCorrect={false}
             leftIcon={<Mail size={20} color={colors.textSecondary} />}
             error={errors.email}
           />
 
           <Input
-            label="Senha"
-            placeholder="No mínimo 6 caracteres"
+            label='Senha'
+            placeholder='No mínimo 6 caracteres'
             value={password}
             onChangeText={(text) => {
               setPassword(text);
-              if (errors.password) setErrors((prev) => ({ ...prev, password: '' }));
+              if (errors.password)
+                setErrors((prev) => ({ ...prev, password: '' }));
             }}
             isPassword
             leftIcon={<Lock size={20} color={colors.textSecondary} />}
@@ -124,8 +119,8 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({
           />
 
           <Input
-            label="Confirmar senha"
-            placeholder="Repita sua senha"
+            label='Confirmar senha'
+            placeholder='Repita sua senha'
             value={confirmPassword}
             onChangeText={(text) => {
               setConfirmPassword(text);
@@ -139,17 +134,20 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({
           />
 
           <Button
-            title="Criar conta"
+            title='Criar conta'
             onPress={handleRegister}
             loading={isLoading}
-            size="lg"
+            size='lg'
             style={styles.submitButton}
           />
         </Card>
 
         <View style={styles.footer}>
           <Text style={styles.footerText}>Já possui uma conta?</Text>
-          <TouchableOpacity onPress={onNavigateToLogin} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+          <TouchableOpacity
+            onPress={onNavigateToLogin}
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          >
             <Text style={styles.loginLink}> Entrar</Text>
           </TouchableOpacity>
         </View>

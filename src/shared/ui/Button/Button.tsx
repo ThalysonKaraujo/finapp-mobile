@@ -10,9 +10,14 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import { borderRadius, colors, shadows, spacing, typography } from '../../theme';
+import { borderRadius, colors, shadows, spacing } from '../../theme';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'danger' | 'ghost';
+export type ButtonVariant =
+  | 'primary'
+  | 'secondary'
+  | 'outline'
+  | 'danger'
+  | 'ghost';
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
 export interface ButtonProps extends TouchableOpacityProps {
@@ -56,8 +61,12 @@ export const Button: React.FC<ButtonProps> = ({
     >
       {loading ? (
         <ActivityIndicator
-          size="small"
-          color={variant === 'primary' || variant === 'danger' ? colors.textInverse : colors.primary}
+          size='small'
+          color={
+            variant === 'primary' || variant === 'danger'
+              ? colors.textInverse
+              : colors.primary
+          }
         />
       ) : (
         <View style={styles.content}>
@@ -73,7 +82,9 @@ export const Button: React.FC<ButtonProps> = ({
           >
             {title}
           </Text>
-          {rightIcon && <View style={styles.rightIconContainer}>{rightIcon}</View>}
+          {rightIcon && (
+            <View style={styles.rightIconContainer}>{rightIcon}</View>
+          )}
         </View>
       )}
     </TouchableOpacity>

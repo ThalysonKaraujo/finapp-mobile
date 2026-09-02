@@ -1,12 +1,6 @@
-import React from 'react';
-import {
-  StyleProp,
-  StyleSheet,
-  Text,
-  View,
-  ViewStyle,
-} from 'react-native';
 import { Inbox } from 'lucide-react-native';
+import React from 'react';
+import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 import { colors, spacing, typography } from '../../theme';
 import { Button } from '../Button';
 
@@ -39,8 +33,8 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
       {actionTitle && onAction && (
         <Button
           title={actionTitle}
-          variant="secondary"
-          size="sm"
+          variant='secondary'
+          size='sm'
           onPress={onAction}
           style={styles.button}
         />

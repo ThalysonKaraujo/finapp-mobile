@@ -1,13 +1,14 @@
-import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
 import { ArrowDownLeft, ArrowUpRight, Eye, EyeOff } from 'lucide-react-native';
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { formatCentsToBRL } from '@/shared/lib';
-import { borderRadius, colors, shadows, spacing, typography } from '@/shared/theme';
+import {
+  borderRadius,
+  colors,
+  shadows,
+  spacing,
+  typography,
+} from '@/shared/theme';
 
 interface BalanceCardProps {
   netBalance: number;

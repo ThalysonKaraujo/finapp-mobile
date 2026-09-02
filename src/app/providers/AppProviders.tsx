@@ -1,9 +1,9 @@
+import { Wallet } from 'lucide-react-native';
 import React, { useEffect } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Wallet } from 'lucide-react-native';
 import { useAuthStore } from '@/features/auth';
-import { borderRadius, colors, spacing, typography } from '@/shared/theme';
+import { colors, spacing, typography } from '@/shared/theme';
 
 interface AppProvidersProps {
   children: React.ReactNode;
@@ -24,7 +24,7 @@ export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => {
         </View>
         <Text style={styles.splashTitle}>FinApp</Text>
         <ActivityIndicator
-          size="small"
+          size='small'
           color={colors.primary}
           style={styles.spinner}
         />

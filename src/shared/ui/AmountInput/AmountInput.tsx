@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { formatCentsToBRL, parseRawDigitsToCents } from '../../lib';
 import { colors, spacing, typography } from '../../theme';
 
@@ -49,7 +43,7 @@ export const AmountInput: React.FC<AmountInputProps> = ({
         {/* Hidden or invisible TextInput over the text for native keypad input */}
         <TextInput
           style={styles.hiddenInput}
-          keyboardType="numeric"
+          keyboardType='numeric'
           value={valueCents === 0 ? '' : String(valueCents)}
           onChangeText={handleChangeText}
           caretHidden

@@ -1,15 +1,10 @@
+import { Calendar, Hash, Layers, Trash2 } from 'lucide-react-native';
 import React, { useState } from 'react';
-import {
-  Alert,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import { Calendar, Hash, Layers, Tag, Trash2 } from 'lucide-react-native';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 import { Transaction, transactionApi } from '@/entities/transaction';
 import { formatCentsToBRL, formatDateFull } from '@/shared/lib';
+import { colors, spacing, typography } from '@/shared/theme';
 import { Badge, Button, Card, Header, ScreenWrapper } from '@/shared/ui';
-import { borderRadius, colors, shadows, spacing, typography } from '@/shared/theme';
 
 interface TransactionDetailsPageProps {
   transaction: Transaction;
@@ -44,7 +39,10 @@ export const TransactionDetailsPage: React.FC<TransactionDetailsPageProps> = ({
                 { text: 'OK', onPress: onDeleted },
               ]);
             } catch (err: any) {
-              Alert.alert('Erro', err?.message || 'Falha ao excluir transação.');
+              Alert.alert(
+                'Erro',
+                err?.message || 'Falha ao excluir transação.',
+              );
             } finally {
               setIsDeleting(false);
             }
@@ -57,24 +55,24 @@ export const TransactionDetailsPage: React.FC<TransactionDetailsPageProps> = ({
   const getTypeBadge = () => {
     switch (transaction.type) {
       case 'INCOME':
-        return <Badge label="Receita" variant="income" />;
+        return <Badge label='Receita' variant='income' />;
       case 'EXPENSE':
-        return <Badge label="Despesa" variant="expense" />;
+        return <Badge label='Despesa' variant='expense' />;
       case 'TRANSFER_IN':
-        return <Badge label="Transferência Recebida" variant="transfer" />;
+        return <Badge label='Transferência Recebida' variant='transfer' />;
       case 'TRANSFER_OUT':
-        return <Badge label="Transferência Enviada" variant="transfer" />;
+        return <Badge label='Transferência Enviada' variant='transfer' />;
       default:
-        return <Badge label={transaction.type} variant="neutral" />;
+        return <Badge label={transaction.type} variant='neutral' />;
     }
   };
 
   return (
     <ScreenWrapper scrollable>
-      <Header title="Detalhes da Transação" onBack={onBack} />
+      <Header title='Detalhes da Transação' onBack={onBack} />
 
       {/* Hero Card */}
-      <Card variant="outlined" padding="lg" style={styles.heroCard}>
+      <Card variant='outlined' padding='lg' style={styles.heroCard}>
         <View style={styles.badgeWrapper}>{getTypeBadge()}</View>
 
         <Text
@@ -90,7 +88,7 @@ export const TransactionDetailsPage: React.FC<TransactionDetailsPageProps> = ({
       </Card>
 
       {/* Info List Card */}
-      <Card variant="outlined" padding="lg" style={styles.infoCard}>
+      <Card variant='outlined' padding='lg' style={styles.infoCard}>
         <Text style={styles.sectionTitle}>Informações Gerais</Text>
 
         {/* Date */}
@@ -100,7 +98,9 @@ export const TransactionDetailsPage: React.FC<TransactionDetailsPageProps> = ({
           </View>
           <View style={styles.infoTextContainer}>
             <Text style={styles.infoLabel}>Data</Text>
-            <Text style={styles.infoValue}>{formatDateFull(transaction.date)}</Text>
+            <Text style={styles.infoValue}>
+              {formatDateFull(transaction.date)}
+            </Text>
           </View>
         </View>
 
@@ -141,9 +141,9 @@ export const TransactionDetailsPage: React.FC<TransactionDetailsPageProps> = ({
 
       {/* Delete Action */}
       <Button
-        title="Excluir Transação"
-        variant="outline"
-        size="lg"
+        title='Excluir Transação'
+        variant='outline'
+        size='lg'
         leftIcon={<Trash2 size={20} color={colors.expense} />}
         textStyle={{ color: colors.expense }}
         onPress={handleDelete}

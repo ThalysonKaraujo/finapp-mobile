@@ -1,3 +1,4 @@
+import { ChevronLeft } from 'lucide-react-native';
 import React from 'react';
 import {
   StyleProp,
@@ -7,7 +8,6 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import { ChevronLeft } from 'lucide-react-native';
 import { colors, spacing, typography } from '../../theme';
 
 export interface HeaderProps {

@@ -1,3 +1,4 @@
+import { Eye, EyeOff } from 'lucide-react-native';
 import React, { useState } from 'react';
 import {
   StyleProp,
@@ -10,7 +11,6 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import { Eye, EyeOff } from 'lucide-react-native';
 import { borderRadius, colors, spacing, typography } from '../../theme';
 
 export interface InputProps extends TextInputProps {

@@ -9,7 +9,13 @@ import {
 } from 'react-native';
 import { borderRadius, colors, spacing, typography } from '../../theme';
 
-export type BadgeVariant = 'income' | 'expense' | 'transfer' | 'info' | 'warning' | 'neutral';
+export type BadgeVariant =
+  | 'income'
+  | 'expense'
+  | 'transfer'
+  | 'info'
+  | 'warning'
+  | 'neutral';
 
 export interface BadgeProps {
   label: string;

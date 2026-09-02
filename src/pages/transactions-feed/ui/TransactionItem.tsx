@@ -1,14 +1,15 @@
-import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
 import { ArrowDownLeft, ArrowUpRight, Repeat } from 'lucide-react-native';
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Transaction } from '@/entities/transaction';
 import { formatCentsToBRL, formatDateFriendly } from '@/shared/lib';
-import { borderRadius, colors, shadows, spacing, typography } from '@/shared/theme';
+import {
+  borderRadius,
+  colors,
+  shadows,
+  spacing,
+  typography,
+} from '@/shared/theme';
 
 interface TransactionItemProps {
   transaction: Transaction;
@@ -21,7 +22,7 @@ export const TransactionItem: React.FC<TransactionItemProps> = ({
 }) => {
   const isIncome =
     transaction.type === 'INCOME' || transaction.type === 'TRANSFER_IN';
-  const isExpense =
+  const _isExpense =
     transaction.type === 'EXPENSE' || transaction.type === 'TRANSFER_OUT';
   const isTransfer =
     transaction.type === 'TRANSFER_IN' || transaction.type === 'TRANSFER_OUT';
@@ -68,9 +69,7 @@ export const TransactionItem: React.FC<TransactionItemProps> = ({
             </View>
           )}
         </View>
-        <Text style={styles.date}>
-          {formatDateFriendly(transaction.date)}
-        </Text>
+        <Text style={styles.date}>{formatDateFriendly(transaction.date)}</Text>
       </View>
 
       <View style={styles.amountContainer}>

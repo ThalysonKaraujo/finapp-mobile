@@ -1,10 +1,16 @@
 import { useState } from 'react';
-import { CreateTransactionInput, CreateTransactionSchema, transactionApi } from '@/entities/transaction';
+import {
+  CreateTransactionInput,
+  CreateTransactionSchema,
+  transactionApi,
+} from '@/entities/transaction';
 
 export function useCreateTransaction(onSuccess?: () => void) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const [validationErrors, setValidationErrors] = useState<
+    Record<string, string>
+  >({});
 
   const submit = async (input: CreateTransactionInput) => {
     setIsLoading(true);
@@ -30,7 +36,8 @@ export function useCreateTransaction(onSuccess?: () => void) {
       onSuccess?.();
       return true;
     } catch (err: any) {
-      const message = err?.message || 'Erro ao criar transação. Verifique os dados.';
+      const message =
+        err?.message || 'Erro ao criar transação. Verifique os dados.';
       setError(message);
       setIsLoading(false);
       return false;

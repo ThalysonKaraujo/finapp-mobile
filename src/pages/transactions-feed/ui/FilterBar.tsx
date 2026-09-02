@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { borderRadius, colors, spacing, typography } from '@/shared/theme';
 import { TransactionFilter } from '../model/useTransactionsFeed';
 

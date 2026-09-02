@@ -1,5 +1,5 @@
-import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React from 'react';
 import { CreateTransactionPage } from '@/pages/create-transaction';
 import { TransactionDetailsPage } from '@/pages/transaction-details';
 import { TransactionsFeedPage } from '@/pages/transactions-feed';
@@ -14,9 +14,9 @@ export const AppNavigator: React.FC = () => {
         headerShown: false,
         animation: 'slide_from_right',
       }}
-      initialRouteName="TransactionsFeed"
+      initialRouteName='TransactionsFeed'
     >
-      <Stack.Screen name="TransactionsFeed">
+      <Stack.Screen name='TransactionsFeed'>
         {({ navigation }) => (
           <TransactionsFeedPage
             onNavigateToCreate={() => navigation.navigate('CreateTransaction')}
@@ -28,7 +28,7 @@ export const AppNavigator: React.FC = () => {
       </Stack.Screen>
 
       <Stack.Screen
-        name="CreateTransaction"
+        name='CreateTransaction'
         options={{
           presentation: 'modal',
           animation: 'slide_from_bottom',
@@ -42,7 +42,7 @@ export const AppNavigator: React.FC = () => {
         )}
       </Stack.Screen>
 
-      <Stack.Screen name="TransactionDetails">
+      <Stack.Screen name='TransactionDetails'>
         {({ navigation, route }) => (
           <TransactionDetailsPage
             transaction={route.params.transaction}

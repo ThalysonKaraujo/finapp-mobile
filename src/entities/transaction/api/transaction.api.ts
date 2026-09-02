@@ -37,9 +37,7 @@ export const transactionApi = {
   },
 
   deleteTransaction: async (id: string): Promise<{ success: boolean }> => {
-    const response = await apiClient.delete(
-      ENDPOINTS.TRANSACTIONS.DELETE(id),
-    );
+    const response = await apiClient.delete(ENDPOINTS.TRANSACTIONS.DELETE(id));
     return response.data;
   },
 };

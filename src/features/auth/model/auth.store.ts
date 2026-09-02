@@ -11,13 +11,17 @@ interface AuthState {
   error: string | null;
 
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (name: string, email: string, password: string) => Promise<{ requiresVerification?: boolean }>;
+  signUp: (
+    name: string,
+    email: string,
+    password: string,
+  ) => Promise<{ requiresVerification?: boolean }>;
   signOut: () => Promise<void>;
   initAuth: () => Promise<void>;
   clearError: () => void;
 }
 
-export const useAuthStore = create<AuthState>((set, get) => ({
+export const useAuthStore = create<AuthState>((set, _get) => ({
   user: null,
   token: null,
   isAuthenticated: false,
@@ -77,7 +81,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         error: null,
       });
     } catch (err: any) {
-      const message = err?.message || 'Falha ao autenticar. Verifique suas credenciais.';
+      const message =
+        err?.message || 'Falha ao autenticar. Verifique suas credenciais.';
       set({ isLoading: false, error: message });
       throw new Error(message);
     }

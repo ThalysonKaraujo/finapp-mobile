@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
 import {
-  Alert,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import { ArrowDownLeft, ArrowUpRight, FileText, Layers } from 'lucide-react-native';
+  ArrowDownLeft,
+  ArrowUpRight,
+  FileText,
+  Layers,
+} from 'lucide-react-native';
+import React, { useState } from 'react';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useCreateTransaction } from '@/features/create-transaction';
-import { AmountInput, Button, Card, DatePickerInput, Header, Input, ScreenWrapper } from '@/shared/ui';
 import { borderRadius, colors, spacing, typography } from '@/shared/theme';
+import {
+  AmountInput,
+  Button,
+  Card,
+  DatePickerInput,
+  Header,
+  Input,
+  ScreenWrapper,
+} from '@/shared/ui';
 
 interface CreateTransactionPageProps {
   onBack: () => void;
@@ -46,7 +53,9 @@ export const CreateTransactionPage: React.FC<CreateTransactionPageProps> = ({
       amount: amountCents,
       type,
       date: date.toISOString(),
-      installments: installments ? Number.parseInt(installments, 10) : undefined,
+      installments: installments
+        ? Number.parseInt(installments, 10)
+        : undefined,
     };
 
     await submit(payload);
@@ -54,7 +63,7 @@ export const CreateTransactionPage: React.FC<CreateTransactionPageProps> = ({
 
   return (
     <ScreenWrapper scrollable>
-      <Header title="Nova Transação" onBack={onBack} />
+      <Header title='Nova Transação' onBack={onBack} />
 
       {/* Type Selector Tabs */}
       <View style={styles.typeSelectorContainer}>
@@ -104,18 +113,18 @@ export const CreateTransactionPage: React.FC<CreateTransactionPageProps> = ({
       </View>
 
       {/* Hero Amount Input */}
-      <Card variant="outlined" padding="lg" style={styles.amountCard}>
+      <Card variant='outlined' padding='lg' style={styles.amountCard}>
         <AmountInput
           valueCents={amountCents}
           onChangeCents={setAmountCents}
           type={type}
-          label="Valor da transação"
+          label='Valor da transação'
           error={validationErrors.amount}
         />
       </Card>
 
       {/* Form Fields Card */}
-      <Card variant="outlined" padding="lg" style={styles.formCard}>
+      <Card variant='outlined' padding='lg' style={styles.formCard}>
         {error && (
           <View style={styles.errorBanner}>
             <Text style={styles.errorBannerText}>{error}</Text>
@@ -123,8 +132,8 @@ export const CreateTransactionPage: React.FC<CreateTransactionPageProps> = ({
         )}
 
         <Input
-          label="Título / Descrição"
-          placeholder="Ex: Supermercado, Salário, Internet"
+          label='Título / Descrição'
+          placeholder='Ex: Supermercado, Salário, Internet'
           value={title}
           onChangeText={setTitle}
           leftIcon={<FileText size={20} color={colors.textSecondary} />}
@@ -132,7 +141,7 @@ export const CreateTransactionPage: React.FC<CreateTransactionPageProps> = ({
         />
 
         <DatePickerInput
-          label="Data da transação"
+          label='Data da transação'
           value={date}
           onChange={setDate}
           error={validationErrors.date}
@@ -140,13 +149,13 @@ export const CreateTransactionPage: React.FC<CreateTransactionPageProps> = ({
 
         {type === 'EXPENSE' && (
           <Input
-            label="Parcelamento (Opcional)"
-            placeholder="Ex: 1 para única, 12 para 12x"
+            label='Parcelamento (Opcional)'
+            placeholder='Ex: 1 para única, 12 para 12x'
             value={installments}
             onChangeText={setInstallments}
-            keyboardType="numeric"
+            keyboardType='numeric'
             leftIcon={<Layers size={20} color={colors.textSecondary} />}
-            helperText="Deixe em branco para transação única"
+            helperText='Deixe em branco para transação única'
             error={validationErrors.installments}
           />
         )}
@@ -154,7 +163,7 @@ export const CreateTransactionPage: React.FC<CreateTransactionPageProps> = ({
         <Button
           title={type === 'EXPENSE' ? 'Adicionar Despesa' : 'Adicionar Receita'}
           variant={type === 'EXPENSE' ? 'danger' : 'primary'}
-          size="lg"
+          size='lg'
           onPress={handleSubmit}
           loading={isLoading}
           style={styles.submitBtn}

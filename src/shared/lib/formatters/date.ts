@@ -3,7 +3,8 @@ import { ptBR } from 'date-fns/locale';
 
 export function formatDateFriendly(dateInput: string | Date): string {
   try {
-    const date = typeof dateInput === 'string' ? parseISO(dateInput) : dateInput;
+    const date =
+      typeof dateInput === 'string' ? parseISO(dateInput) : dateInput;
     if (Number.isNaN(date.getTime())) return '';
 
     if (isToday(date)) {
@@ -20,7 +21,8 @@ export function formatDateFriendly(dateInput: string | Date): string {
 
 export function formatDateShort(dateInput: string | Date): string {
   try {
-    const date = typeof dateInput === 'string' ? parseISO(dateInput) : dateInput;
+    const date =
+      typeof dateInput === 'string' ? parseISO(dateInput) : dateInput;
     if (Number.isNaN(date.getTime())) return '';
     return format(date, 'dd/MM/yyyy');
   } catch {
@@ -30,7 +32,8 @@ export function formatDateShort(dateInput: string | Date): string {
 
 export function formatDateFull(dateInput: string | Date): string {
   try {
-    const date = typeof dateInput === 'string' ? parseISO(dateInput) : dateInput;
+    const date =
+      typeof dateInput === 'string' ? parseISO(dateInput) : dateInput;
     if (Number.isNaN(date.getTime())) return '';
     return format(date, "EEEE, d 'de' MMMM 'de' yyyy", { locale: ptBR });
   } catch {

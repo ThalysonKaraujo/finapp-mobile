@@ -1,5 +1,5 @@
-import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React from 'react';
 import { LoginPage } from '@/pages/login';
 import { RegisterPage } from '@/pages/register';
 import { AuthStackParamList } from './types';
@@ -13,9 +13,9 @@ export const AuthNavigator: React.FC = () => {
         headerShown: false,
         animation: 'slide_from_right',
       }}
-      initialRouteName="Login"
+      initialRouteName='Login'
     >
-      <Stack.Screen name="Login">
+      <Stack.Screen name='Login'>
         {({ navigation }) => (
           <LoginPage
             onNavigateToRegister={() => navigation.navigate('Register')}
@@ -23,7 +23,7 @@ export const AuthNavigator: React.FC = () => {
         )}
       </Stack.Screen>
 
-      <Stack.Screen name="Register">
+      <Stack.Screen name='Register'>
         {({ navigation }) => (
           <RegisterPage
             onNavigateToLogin={() => navigation.navigate('Login')}

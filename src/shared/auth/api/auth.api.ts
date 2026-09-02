@@ -1,8 +1,16 @@
 import { apiClient, ENDPOINTS } from '@/shared/api';
-import { AuthSession, SignInResponse, SignUpResponse, User } from '../model/auth.types';
+import {
+  AuthSession,
+  SignInResponse,
+  SignUpResponse,
+  User,
+} from '../model/auth.types';
 
 export const authApi = {
-  signInWithEmail: async (email: string, password: string): Promise<SignInResponse> => {
+  signInWithEmail: async (
+    email: string,
+    password: string,
+  ): Promise<SignInResponse> => {
     const response = await apiClient.post<SignInResponse>(
       ENDPOINTS.AUTH.SIGN_IN_EMAIL,
       { email, password },
@@ -35,7 +43,7 @@ export const authApi = {
       const response = await apiClient.get<{ user: User }>(
         ENDPOINTS.AUTH.GET_SESSION,
       );
-      if (response.data && response.data.user) {
+      if (response.data?.user) {
         return { user: response.data.user };
       }
       return null;

@@ -1,4 +1,4 @@
-export * from './types';
-export * from './AuthNavigator';
 export * from './AppNavigator';
+export * from './AuthNavigator';
 export * from './Navigation';
+export * from './types';
