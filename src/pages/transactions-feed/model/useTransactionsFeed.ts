@@ -52,7 +52,6 @@ export function useTransactionsFeed() {
     [transactions.length],
   );
 
-  // Auto reload feed data whenever screen gains focus
   useFocusEffect(
     useCallback(() => {
       fetchTransactions(1);
@@ -71,7 +70,6 @@ export function useTransactionsFeed() {
 
   const filteredTransactions = useMemo(() => {
     return transactions.filter((t) => {
-      // Type filtering
       if (
         filter === 'INCOME' &&
         t.type !== 'INCOME' &&
@@ -87,7 +85,6 @@ export function useTransactionsFeed() {
         return false;
       }
 
-      // Category filtering
       if (selectedCategoryId) {
         const catId = t.categoryId || (t as any).category_id || t.category?.id;
         if (catId !== selectedCategoryId) {

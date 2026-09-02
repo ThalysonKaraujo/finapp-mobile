@@ -27,10 +27,10 @@ export type TransactionWallet = z.infer<typeof TransactionWalletSchema>;
 
 export const TransactionSchema = z.object({
   id: z.string(),
-  amount: z.number(), // In cents
+  amount: z.number(),
   type: TransactionTypeEnum,
   title: z.string(),
-  date: z.string(), // ISO string
+  date: z.string(),
   userId: z.string(),
   walletId: z.string().nullable().optional(),
   categoryId: z.string().nullable().optional(),

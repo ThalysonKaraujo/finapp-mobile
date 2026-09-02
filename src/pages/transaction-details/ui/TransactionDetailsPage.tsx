@@ -62,9 +62,7 @@ export const TransactionDetailsPage: React.FC<TransactionDetailsPageProps> = ({
             if (found) setCategory(found);
           }
         }
-      } catch {
-        // Handled silently
-      }
+      } catch {}
     }
     loadAuxiliaryInfo();
   }, [walletId, categoryId]);
@@ -131,7 +129,6 @@ export const TransactionDetailsPage: React.FC<TransactionDetailsPageProps> = ({
         }
       />
 
-      {/* Hero Card */}
       <Card variant='outlined' padding='lg' style={styles.heroCard}>
         <View style={styles.badgeWrapper}>{getTypeBadge()}</View>
 
@@ -147,11 +144,9 @@ export const TransactionDetailsPage: React.FC<TransactionDetailsPageProps> = ({
         <Text style={styles.title}>{transaction.title}</Text>
       </Card>
 
-      {/* Info List Card */}
       <Card variant='outlined' padding='lg' style={styles.infoCard}>
         <Text style={styles.sectionTitle}>Informações Gerais</Text>
 
-        {/* Date */}
         <View style={styles.infoRow}>
           <View style={styles.infoIconWrapper}>
             <Calendar size={18} color={colors.primary} />
@@ -166,7 +161,6 @@ export const TransactionDetailsPage: React.FC<TransactionDetailsPageProps> = ({
 
         <View style={styles.divider} />
 
-        {/* Wallet info */}
         <View style={styles.infoRow}>
           <View style={styles.infoIconWrapper}>
             <WalletIcon size={18} color={colors.primary} />
@@ -181,7 +175,6 @@ export const TransactionDetailsPage: React.FC<TransactionDetailsPageProps> = ({
 
         <View style={styles.divider} />
 
-        {/* Category info */}
         <View style={styles.infoRow}>
           <View style={styles.infoIconWrapper}>
             <Tag
@@ -214,7 +207,6 @@ export const TransactionDetailsPage: React.FC<TransactionDetailsPageProps> = ({
 
         <View style={styles.divider} />
 
-        {/* Installments */}
         {transaction.installmentNumber && (
           <>
             <View style={styles.infoRow}>
@@ -233,7 +225,6 @@ export const TransactionDetailsPage: React.FC<TransactionDetailsPageProps> = ({
           </>
         )}
 
-        {/* Identifier */}
         <View style={styles.infoRow}>
           <View style={styles.infoIconWrapper}>
             <Hash size={18} color={colors.textSecondary} />
@@ -247,7 +238,6 @@ export const TransactionDetailsPage: React.FC<TransactionDetailsPageProps> = ({
         </View>
       </Card>
 
-      {/* Action Buttons */}
       <View style={styles.actionsContainer}>
         {onEdit && (
           <Button

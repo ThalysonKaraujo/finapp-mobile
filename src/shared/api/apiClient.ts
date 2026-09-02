@@ -12,7 +12,6 @@ export const apiClient = axios.create({
   },
 });
 
-// Attach Authorization Bearer token & Origin header if present
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = appStorage.getString(StorageKeys.AUTH_TOKEN);
@@ -29,7 +28,6 @@ apiClient.interceptors.request.use(
   (error: AxiosError) => Promise.reject(error),
 );
 
-// Format and handle API errors cleanly
 apiClient.interceptors.response.use(
   (response) => response,
   (

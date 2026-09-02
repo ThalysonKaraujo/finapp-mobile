@@ -65,7 +65,6 @@ export const DepositWithdrawObjectivePage: React.FC<
         onBack={onBack}
       />
 
-      {/* Target Objective Summary */}
       <Card variant='subtle' padding='md' style={styles.objectiveInfo}>
         <Text style={styles.objectiveName}>{objective.name}</Text>
         <Text style={styles.objectiveBalance}>
@@ -73,7 +72,6 @@ export const DepositWithdrawObjectivePage: React.FC<
         </Text>
       </Card>
 
-      {/* Mode Switcher */}
       <View style={styles.modeContainer}>
         <TouchableOpacity
           activeOpacity={0.8}

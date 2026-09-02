@@ -3,7 +3,7 @@ import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 import { borderRadius, colors, spacing, typography } from '../../theme';
 
 export interface ProgressBarProps {
-  progress: number; // 0 to 100 or 0 to 1
+  progress: number;
   color?: string;
   trackColor?: string;
   height?: number;
@@ -21,7 +21,6 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   rightLabel,
   style,
 }) => {
-  // Normalize percentage between 0 and 100
   const normalizedPercentage = Math.min(
     Math.max(progress > 1 ? progress : progress * 100, 0),
     100,

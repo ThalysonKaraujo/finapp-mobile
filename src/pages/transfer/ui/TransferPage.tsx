@@ -134,7 +134,6 @@ export const TransferPage: React.FC<TransferPageProps> = ({
     <ScreenWrapper scrollable>
       <Header title='Transferência entre Carteiras' onBack={onBack} />
 
-      {/* Amount Input */}
       <Card variant='outlined' padding='lg' style={styles.amountCard}>
         <AmountInput
           valueCents={amountCents}
@@ -146,7 +145,6 @@ export const TransferPage: React.FC<TransferPageProps> = ({
       </Card>
 
       <Card variant='outlined' padding='lg' style={styles.card}>
-        {/* Source Wallet */}
         <Text style={styles.sectionLabel}>
           Carteira de Origem (De onde sai)
         </Text>
@@ -189,7 +187,6 @@ export const TransferPage: React.FC<TransferPageProps> = ({
 
         <View style={styles.divider} />
 
-        {/* Destination Wallet */}
         <Text style={styles.sectionLabel}>
           Carteira de Destino (Para onde vai)
         </Text>

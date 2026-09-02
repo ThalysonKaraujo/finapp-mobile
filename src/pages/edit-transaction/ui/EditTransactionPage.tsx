@@ -77,9 +77,7 @@ export const EditTransactionPage: React.FC<EditTransactionPageProps> = ({
         ]);
         setWallets(walletsList);
         setCategories(categoriesList);
-      } catch {
-        // Handled silently
-      }
+      } catch {}
     }
     loadAuxiliaryData();
   }, []);
@@ -132,7 +130,6 @@ export const EditTransactionPage: React.FC<EditTransactionPageProps> = ({
     <ScreenWrapper scrollable>
       <Header title='Editar Transação' onBack={onBack} />
 
-      {/* Type Selector Tabs (Only for normal INCOME / EXPENSE) */}
       {!isTransfer ? (
         <View style={styles.typeSelectorContainer}>
           <TouchableOpacity
@@ -189,7 +186,6 @@ export const EditTransactionPage: React.FC<EditTransactionPageProps> = ({
         </Card>
       )}
 
-      {/* Amount Input */}
       <Card variant='outlined' padding='lg' style={styles.amountCard}>
         <Text style={styles.amountLabel}>Valor da Transação</Text>
         <AmountInput
@@ -204,7 +200,6 @@ export const EditTransactionPage: React.FC<EditTransactionPageProps> = ({
         </Text>
       </Card>
 
-      {/* Form Fields Card */}
       <Card variant='outlined' padding='lg' style={styles.formCard}>
         <Input
           label='Título / Descrição'
@@ -214,7 +209,6 @@ export const EditTransactionPage: React.FC<EditTransactionPageProps> = ({
           leftIcon={<FileText size={18} color={colors.textSecondary} />}
         />
 
-        {/* Wallet Selection */}
         {wallets.length > 0 && (
           <View style={styles.selectorSection}>
             <View style={styles.selectorHeader}>
@@ -271,7 +265,6 @@ export const EditTransactionPage: React.FC<EditTransactionPageProps> = ({
           </View>
         )}
 
-        {/* Category Selection */}
         {categories.length > 0 && (
           <View style={styles.selectorSection}>
             <View style={styles.selectorHeader}>
@@ -333,14 +326,12 @@ export const EditTransactionPage: React.FC<EditTransactionPageProps> = ({
           </View>
         )}
 
-        {/* Date Picker */}
         <DatePickerInput
           label='Data da Transação'
           value={date}
           onChange={setDate}
         />
 
-        {/* Future Installments Switch */}
         {transaction.recurrenceId && (
           <View style={styles.recurrenceOption}>
             <View style={styles.recurrenceTextContainer}>
@@ -364,7 +355,6 @@ export const EditTransactionPage: React.FC<EditTransactionPageProps> = ({
         )}
       </Card>
 
-      {/* Submit Action Button */}
       <Button
         title='Salvar Alterações'
         size='lg'

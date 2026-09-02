@@ -18,9 +18,7 @@ class FallbackStorage implements IStorage {
     if (typeof globalThis !== 'undefined' && (globalThis as any).localStorage) {
       try {
         return (globalThis as any).localStorage.getItem(key);
-      } catch {
-        // Fallback to memory
-      }
+      } catch {}
     }
     return this.memoryStore.get(key) ?? null;
   }
@@ -29,9 +27,7 @@ class FallbackStorage implements IStorage {
     if (typeof globalThis !== 'undefined' && (globalThis as any).localStorage) {
       try {
         (globalThis as any).localStorage.setItem(key, value);
-      } catch {
-        // Fallback to memory
-      }
+      } catch {}
     }
     this.memoryStore.set(key, value);
   }
@@ -40,9 +36,7 @@ class FallbackStorage implements IStorage {
     if (typeof globalThis !== 'undefined' && (globalThis as any).localStorage) {
       try {
         (globalThis as any).localStorage.removeItem(key);
-      } catch {
-        // Fallback to memory
-      }
+      } catch {}
     }
     this.memoryStore.delete(key);
   }
@@ -51,9 +45,7 @@ class FallbackStorage implements IStorage {
     if (typeof globalThis !== 'undefined' && (globalThis as any).localStorage) {
       try {
         (globalThis as any).localStorage.clear();
-      } catch {
-        // Fallback to memory
-      }
+      } catch {}
     }
     this.memoryStore.clear();
   }
@@ -61,11 +53,9 @@ class FallbackStorage implements IStorage {
 
 function initializeStorage(): IStorage {
   try {
-    // Dynamically require to avoid crash if native bindings are absent in Expo Go
     const { MMKV } = require('react-native-mmkv');
     const instance = new MMKV({ id: 'finapp-storage' });
 
-    // Validate that instance methods work
     instance.getString('__test__');
 
     return {
@@ -75,7 +65,6 @@ function initializeStorage(): IStorage {
       clearAll: () => instance.clearAll(),
     };
   } catch {
-    // Expo Go / Web / Environment without native C++ MMKV binaries
     return new FallbackStorage();
   }
 }

@@ -75,7 +75,6 @@ export const WalletsAndObjectivesPage: React.FC<
       setWallets(walletsData);
       setObjectives(objectivesData);
     } catch {
-      // Handled silently with empty states
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -98,7 +97,6 @@ export const WalletsAndObjectivesPage: React.FC<
     <ScreenWrapper>
       <Header title='Carteiras & Metas' />
 
-      {/* Tab Switcher */}
       <View style={styles.tabContainer}>
         <TouchableOpacity
           activeOpacity={0.8}
@@ -149,7 +147,6 @@ export const WalletsAndObjectivesPage: React.FC<
         </TouchableOpacity>
       </View>
 
-      {/* Hero Summary Card */}
       <Card variant='default' padding='lg' style={styles.heroCard}>
         <Text style={styles.heroLabel}>
           {activeTab === 'WALLETS'
@@ -195,7 +192,6 @@ export const WalletsAndObjectivesPage: React.FC<
         </View>
       </Card>
 
-      {/* Main List */}
       {isLoading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size='large' color={colors.primary} />

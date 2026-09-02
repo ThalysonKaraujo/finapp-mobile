@@ -58,9 +58,7 @@ export const CreateTransactionPage: React.FC<CreateTransactionPageProps> = ({
         ]);
         setWallets(walletsList);
         setCategories(categoriesList);
-      } catch {
-        // Handled silently
-      }
+      } catch {}
     }
     loadAuxiliaryData();
   }, []);
@@ -99,7 +97,6 @@ export const CreateTransactionPage: React.FC<CreateTransactionPageProps> = ({
     <ScreenWrapper scrollable>
       <Header title='Nova Transação' onBack={onBack} />
 
-      {/* Type Selector Tabs */}
       <View style={styles.typeSelectorContainer}>
         <TouchableOpacity
           activeOpacity={0.8}
@@ -146,7 +143,6 @@ export const CreateTransactionPage: React.FC<CreateTransactionPageProps> = ({
         </TouchableOpacity>
       </View>
 
-      {/* Hero Amount Input */}
       <Card variant='outlined' padding='lg' style={styles.amountCard}>
         <AmountInput
           valueCents={amountCents}
@@ -157,7 +153,6 @@ export const CreateTransactionPage: React.FC<CreateTransactionPageProps> = ({
         />
       </Card>
 
-      {/* Form Fields Card */}
       <Card variant='outlined' padding='lg' style={styles.formCard}>
         {error && (
           <View style={styles.errorBanner}>
@@ -174,7 +169,6 @@ export const CreateTransactionPage: React.FC<CreateTransactionPageProps> = ({
           error={validationErrors.title}
         />
 
-        {/* Category Selector if available */}
         {categories.length > 0 && (
           <View style={styles.selectorSection}>
             <Text style={styles.selectorLabel}>Categoria (Opcional)</Text>
@@ -218,7 +212,6 @@ export const CreateTransactionPage: React.FC<CreateTransactionPageProps> = ({
           </View>
         )}
 
-        {/* Wallet Selector if available */}
         {wallets.length > 0 && (
           <View style={styles.selectorSection}>
             <Text style={styles.selectorLabel}>

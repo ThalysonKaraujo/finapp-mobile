@@ -40,7 +40,6 @@ export const AmountInput: React.FC<AmountInputProps> = ({
           {formattedValue}
         </Text>
 
-        {/* Hidden or invisible TextInput over the text for native keypad input */}
         <TextInput
           style={styles.hiddenInput}
           keyboardType='numeric'

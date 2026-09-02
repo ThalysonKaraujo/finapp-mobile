@@ -71,7 +71,6 @@ export const ReportsPage: React.FC = () => {
         );
         setReport(data);
       } catch {
-        // Handled silently
       } finally {
         setIsLoading(false);
         setIsRefreshing(false);
@@ -114,7 +113,6 @@ export const ReportsPage: React.FC = () => {
     >
       <Header title='Relatórios Mensais' />
 
-      {/* Month / Year Navigator */}
       <View style={styles.monthNavigator}>
         <TouchableOpacity
           style={styles.navButton}
@@ -143,7 +141,6 @@ export const ReportsPage: React.FC = () => {
         </View>
       ) : (
         <>
-          {/* Monthly Overview Card */}
           <Card variant='outlined' padding='lg' style={styles.summaryCard}>
             <Text style={styles.cardSectionTitle}>Resumo do Período</Text>
 
@@ -199,7 +196,6 @@ export const ReportsPage: React.FC = () => {
             </View>
           </Card>
 
-          {/* Expenses By Category Card */}
           <Card variant='outlined' padding='lg' style={styles.categoryCard}>
             <Text style={styles.cardSectionTitle}>Gastos por Categoria</Text>
 

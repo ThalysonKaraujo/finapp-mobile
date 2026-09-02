@@ -23,7 +23,7 @@ describe('Transaction Schemas Validation', () => {
   it('should validate CreateTransactionSchema with positive amount', () => {
     const validCreateInput = {
       title: 'Supermercado',
-      amount: 5490, // R$ 54,90
+      amount: 5490,
       type: 'EXPENSE' as const,
       date: '2026-09-01T10:00:00.000Z',
     };

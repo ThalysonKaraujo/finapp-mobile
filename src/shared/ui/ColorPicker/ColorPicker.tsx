@@ -4,16 +4,16 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { colors, spacing, typography } from '../../theme';
 
 export const PALETTE_COLORS = [
-  '#0066FF', // Blue
-  '#10B981', // Emerald
-  '#F59E0B', // Amber
-  '#EF4444', // Red
-  '#8B5CF6', // Purple
-  '#EC4899', // Pink
-  '#06B6D4', // Cyan
-  '#6366F1', // Indigo
-  '#14B8A6', // Teal
-  '#64748B', // Slate
+  '#0066FF',
+  '#10B981',
+  '#F59E0B',
+  '#EF4444',
+  '#8B5CF6',
+  '#EC4899',
+  '#06B6D4',
+  '#6366F1',
+  '#14B8A6',
+  '#64748B',
 ];
 
 export interface ColorPickerProps {

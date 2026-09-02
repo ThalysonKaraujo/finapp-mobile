@@ -1,12 +1,10 @@
 export const colors = {
-  // Primary brand palette (Vibrant Fintech Blue & Deep Navy)
   primary: '#0066FF',
   primaryDark: '#0047B3',
   primaryLight: '#3385FF',
   primaryMuted: '#E6F0FF',
   primarySubtle: '#F0F6FE',
 
-  // Neutrals (White, Slate, Dark Blue-Grey)
   background: '#F8FAFC',
   surface: '#FFFFFF',
   surfaceSubtle: '#F1F5F9',
@@ -21,7 +19,6 @@ export const colors = {
   borderFocus: '#0066FF',
   divider: '#F1F5F9',
 
-  // Financial Accents (Crisp & High Contrast)
   income: '#10B981',
   incomeBackground: '#ECFDF5',
   incomeBorder: '#A7F3D0',
@@ -34,7 +31,6 @@ export const colors = {
   transferBackground: '#EEF2FF',
   transferBorder: '#C7D2FE',
 
-  // System states
   warning: '#F59E0B',
   warningBackground: '#FFFBEB',
   info: '#0284C7',

@@ -68,7 +68,6 @@ export const TransactionItem: React.FC<TransactionItemProps> = ({
           )}
         </View>
 
-        {/* Subtitle with date, category and wallet */}
         <View style={styles.metaRow}>
           <Text style={styles.metaText}>
             {formatDateFriendly(transaction.date)}

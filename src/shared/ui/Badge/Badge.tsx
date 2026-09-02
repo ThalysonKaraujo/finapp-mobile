@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     ...typography.caption,
     fontWeight: '600',
   },
-  // Variants
+
   income: {
     backgroundColor: colors.incomeBackground,
     borderWidth: 1,
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
   },
-  // Text Colors
+
   text_income: {
     color: colors.income,
   },

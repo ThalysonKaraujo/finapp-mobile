@@ -27,7 +27,6 @@ export const BalanceCard: React.FC<BalanceCardProps> = ({
 }) => {
   return (
     <View style={styles.container}>
-      {/* Top Header inside card */}
       <View style={styles.topRow}>
         <Text style={styles.label}>Saldo Disponível</Text>
         <TouchableOpacity
@@ -43,14 +42,11 @@ export const BalanceCard: React.FC<BalanceCardProps> = ({
         </TouchableOpacity>
       </View>
 
-      {/* Main Balance Display */}
       <Text style={styles.balanceAmount}>
         {isVisible ? formatCentsToBRL(netBalance) : '••••••••'}
       </Text>
 
-      {/* Income & Expense Badges */}
       <View style={styles.metricsContainer}>
-        {/* Income */}
         <View style={styles.metricItem}>
           <View style={[styles.metricIconCircle, styles.incomeIconBg]}>
             <ArrowDownLeft size={16} color={colors.income} />
@@ -65,7 +61,6 @@ export const BalanceCard: React.FC<BalanceCardProps> = ({
 
         <View style={styles.metricDivider} />
 
-        {/* Expense */}
         <View style={styles.metricItem}>
           <View style={[styles.metricIconCircle, styles.expenseIconBg]}>
             <ArrowUpRight size={16} color={colors.expense} />

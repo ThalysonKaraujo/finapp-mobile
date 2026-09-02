@@ -52,7 +52,7 @@ export const AppNavigator: React.FC = () => {
             onBack={() => navigation.goBack()}
             onSuccess={() => {
               navigation.goBack();
-              navigation.goBack(); // Go back to the feed list so it refreshes
+              navigation.goBack();
             }}
           />
         )}

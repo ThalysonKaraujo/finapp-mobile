@@ -71,7 +71,6 @@ export const TransactionsFeedPage: React.FC<TransactionsFeedPageProps> = ({
 
   return (
     <ScreenWrapper>
-      {/* Top Header */}
       <View style={styles.header}>
         <View style={styles.userInfo}>
           <View style={styles.avatar}>
@@ -94,7 +93,6 @@ export const TransactionsFeedPage: React.FC<TransactionsFeedPageProps> = ({
         </TouchableOpacity>
       </View>
 
-      {/* Main Content List */}
       <FlatList
         data={transactions}
         keyExtractor={(item) => item.id}
@@ -218,7 +216,6 @@ export const TransactionsFeedPage: React.FC<TransactionsFeedPageProps> = ({
         showsVerticalScrollIndicator={false}
       />
 
-      {/* Floating Action Button */}
       <TouchableOpacity
         activeOpacity={0.85}
         onPress={onNavigateToCreate}
