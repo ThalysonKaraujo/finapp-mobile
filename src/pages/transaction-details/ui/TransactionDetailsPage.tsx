@@ -30,18 +30,28 @@ export const TransactionDetailsPage: React.FC<TransactionDetailsPageProps> = ({
   const [wallet, setWallet] = useState<Wallet | null>(null);
   const [category, setCategory] = useState<Category | null>(null);
 
+  const walletId =
+    transaction.walletId || (transaction as any).wallet_id || undefined;
+  const categoryId =
+    transaction.categoryId || (transaction as any).category_id || undefined;
+
   useEffect(() => {
     async function loadAuxiliaryInfo() {
       try {
-        if (transaction.walletId) {
-          const wallets = await walletApi.getWallets();
-          const found = wallets.find((w) => w.id === transaction.walletId);
-          if (found) setWallet(found);
+        if (walletId) {
+          try {
+            const w = await walletApi.getWalletById(walletId);
+            if (w) setWallet(w);
+          } catch {
+            const wallets = await walletApi.getWallets();
+            const found = wallets.find((item) => item.id === walletId);
+            if (found) setWallet(found);
+          }
         }
 
-        if (transaction.categoryId) {
+        if (categoryId) {
           const categories = await categoryApi.getCategories();
-          const found = categories.find((c) => c.id === transaction.categoryId);
+          const found = categories.find((c) => c.id === categoryId);
           if (found) setCategory(found);
         }
       } catch {
@@ -49,7 +59,7 @@ export const TransactionDetailsPage: React.FC<TransactionDetailsPageProps> = ({
       }
     }
     loadAuxiliaryInfo();
-  }, [transaction.walletId, transaction.categoryId]);
+  }, [walletId, categoryId]);
 
   const isIncome =
     transaction.type === 'INCOME' || transaction.type === 'TRANSFER_IN';
@@ -138,21 +148,20 @@ export const TransactionDetailsPage: React.FC<TransactionDetailsPageProps> = ({
 
         <View style={styles.divider} />
 
-        {/* Wallet info if present */}
-        {wallet && (
-          <>
-            <View style={styles.infoRow}>
-              <View style={styles.infoIconWrapper}>
-                <WalletIcon size={18} color={colors.primary} />
-              </View>
-              <View style={styles.infoTextContainer}>
-                <Text style={styles.infoLabel}>Carteira / Conta</Text>
-                <Text style={styles.infoValue}>{wallet.name}</Text>
-              </View>
-            </View>
-            <View style={styles.divider} />
-          </>
-        )}
+        {/* Wallet info */}
+        <View style={styles.infoRow}>
+          <View style={styles.infoIconWrapper}>
+            <WalletIcon size={18} color={colors.primary} />
+          </View>
+          <View style={styles.infoTextContainer}>
+            <Text style={styles.infoLabel}>Carteira / Conta</Text>
+            <Text style={styles.infoValue}>
+              {wallet ? wallet.name : walletId ? 'Carregando...' : 'Nenhuma'}
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.divider} />
 
         {/* Category info if present */}
         {category && (
