@@ -3,10 +3,21 @@ import {
   ArrowUpRight,
   FileText,
   Layers,
+  Wallet as WalletIcon,
 } from 'lucide-react-native';
-import React, { useState } from 'react';
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  Alert,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { Category, categoryApi } from '@/entities/category';
+import { Wallet, walletApi } from '@/entities/wallet';
 import { useCreateTransaction } from '@/features/create-transaction';
+import { formatCentsToBRL } from '@/shared/lib';
 import { borderRadius, colors, spacing, typography } from '@/shared/theme';
 import {
   AmountInput,
@@ -32,6 +43,27 @@ export const CreateTransactionPage: React.FC<CreateTransactionPageProps> = ({
   const [title, setTitle] = useState('');
   const [date, setDate] = useState<Date>(new Date());
   const [installments, setInstallments] = useState('');
+  const [walletId, setWalletId] = useState<string | undefined>(undefined);
+  const [categoryId, setCategoryId] = useState<string | undefined>(undefined);
+
+  const [wallets, setWallets] = useState<Wallet[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    async function loadAuxiliaryData() {
+      try {
+        const [walletsList, categoriesList] = await Promise.all([
+          walletApi.getWallets(),
+          categoryApi.getCategories(),
+        ]);
+        setWallets(walletsList);
+        setCategories(categoriesList);
+      } catch {
+        // Handled silently
+      }
+    }
+    loadAuxiliaryData();
+  }, []);
 
   const { submit, isLoading, error, validationErrors, clearErrors } =
     useCreateTransaction(() => {
@@ -53,6 +85,8 @@ export const CreateTransactionPage: React.FC<CreateTransactionPageProps> = ({
       amount: amountCents,
       type,
       date: date.toISOString(),
+      walletId,
+      categoryId,
       installments: installments
         ? Number.parseInt(installments, 10)
         : undefined,
@@ -140,6 +174,92 @@ export const CreateTransactionPage: React.FC<CreateTransactionPageProps> = ({
           error={validationErrors.title}
         />
 
+        {/* Category Selector if available */}
+        {categories.length > 0 && (
+          <View style={styles.selectorSection}>
+            <Text style={styles.selectorLabel}>Categoria (Opcional)</Text>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.horizontalScroll}
+            >
+              {categories.map((cat) => {
+                const isSelected = cat.id === categoryId;
+                return (
+                  <TouchableOpacity
+                    key={cat.id}
+                    activeOpacity={0.7}
+                    onPress={() =>
+                      setCategoryId(isSelected ? undefined : cat.id)
+                    }
+                    style={[
+                      styles.selectorPill,
+                      isSelected && styles.selectorPillSelected,
+                    ]}
+                  >
+                    <View
+                      style={[
+                        styles.catDot,
+                        { backgroundColor: cat.color || colors.primary },
+                      ]}
+                    />
+                    <Text
+                      style={[
+                        styles.selectorPillText,
+                        isSelected && styles.selectorPillTextSelected,
+                      ]}
+                    >
+                      {cat.name}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </View>
+        )}
+
+        {/* Wallet Selector if available */}
+        {wallets.length > 0 && (
+          <View style={styles.selectorSection}>
+            <Text style={styles.selectorLabel}>
+              Carteira / Conta (Opcional)
+            </Text>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.horizontalScroll}
+            >
+              {wallets.map((w) => {
+                const isSelected = w.id === walletId;
+                return (
+                  <TouchableOpacity
+                    key={w.id}
+                    activeOpacity={0.7}
+                    onPress={() => setWalletId(isSelected ? undefined : w.id)}
+                    style={[
+                      styles.selectorPill,
+                      isSelected && styles.selectorPillSelected,
+                    ]}
+                  >
+                    <WalletIcon
+                      size={14}
+                      color={isSelected ? colors.primary : colors.textSecondary}
+                    />
+                    <Text
+                      style={[
+                        styles.selectorPillText,
+                        isSelected && styles.selectorPillTextSelected,
+                      ]}
+                    >
+                      {w.name} ({formatCentsToBRL(w.balance)})
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </View>
+        )}
+
         <DatePickerInput
           label='Data da transação'
           value={date}
@@ -222,6 +342,48 @@ const styles = StyleSheet.create({
   },
   formCard: {
     marginBottom: spacing.xxl,
+  },
+  selectorSection: {
+    marginBottom: spacing.base,
+  },
+  selectorLabel: {
+    ...typography.subtitle,
+    color: colors.textPrimary,
+    marginBottom: spacing.xs + 2,
+  },
+  horizontalScroll: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    paddingVertical: 2,
+  },
+  selectorPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: spacing.xs + 4,
+    paddingHorizontal: spacing.md,
+    borderRadius: borderRadius.full,
+    backgroundColor: colors.surfaceSubtle,
+    borderWidth: 1,
+    borderColor: colors.border,
+    gap: 6,
+  },
+  selectorPillSelected: {
+    backgroundColor: colors.primarySubtle,
+    borderColor: colors.primary,
+  },
+  catDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+  },
+  selectorPillText: {
+    ...typography.caption,
+    color: colors.textPrimary,
+    fontWeight: '600',
+  },
+  selectorPillTextSelected: {
+    color: colors.primary,
+    fontWeight: '700',
   },
   errorBanner: {
     backgroundColor: colors.expenseBackground,
