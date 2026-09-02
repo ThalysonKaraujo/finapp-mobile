@@ -123,7 +123,10 @@ export const WalletsAndObjectivesPage: React.FC<
                   o.id === item.id ? { ...o, isCompleted: true } : o,
                 ),
               );
-              Alert.alert('Parabéns! 🚀', `A meta "${item.name}" foi concluída com sucesso!`);
+              Alert.alert(
+                'Parabéns! 🚀',
+                `A meta "${item.name}" foi concluída com sucesso!`,
+              );
             } catch {
               Alert.alert('Erro', 'Não foi possível finalizar a meta.');
             }
