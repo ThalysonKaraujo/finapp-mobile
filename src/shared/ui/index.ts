@@ -6,3 +6,4 @@ export * from './AmountInput';
 export * from './ScreenWrapper';
 export * from './Header';
 export * from './EmptyState';
+export * from './DatePickerInput';

@@ -6,9 +6,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { ArrowDownLeft, ArrowUpRight, Calendar, FileText, Layers } from 'lucide-react-native';
+import { ArrowDownLeft, ArrowUpRight, FileText, Layers } from 'lucide-react-native';
 import { useCreateTransaction } from '@/features/create-transaction';
-import { AmountInput, Button, Card, Header, Input, ScreenWrapper } from '@/shared/ui';
+import { AmountInput, Button, Card, DatePickerInput, Header, Input, ScreenWrapper } from '@/shared/ui';
 import { borderRadius, colors, spacing, typography } from '@/shared/theme';
 
 interface CreateTransactionPageProps {
@@ -23,7 +23,7 @@ export const CreateTransactionPage: React.FC<CreateTransactionPageProps> = ({
   const [type, setType] = useState<'INCOME' | 'EXPENSE'>('EXPENSE');
   const [amountCents, setAmountCents] = useState<number>(0);
   const [title, setTitle] = useState('');
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [date, setDate] = useState<Date>(new Date());
   const [installments, setInstallments] = useState('');
 
   const { submit, isLoading, error, validationErrors, clearErrors } =
@@ -45,7 +45,7 @@ export const CreateTransactionPage: React.FC<CreateTransactionPageProps> = ({
       title: title.trim(),
       amount: amountCents,
       type,
-      date: new Date(`${date}T12:00:00.000Z`).toISOString(),
+      date: date.toISOString(),
       installments: installments ? Number.parseInt(installments, 10) : undefined,
     };
 
@@ -131,12 +131,10 @@ export const CreateTransactionPage: React.FC<CreateTransactionPageProps> = ({
           error={validationErrors.title}
         />
 
-        <Input
-          label="Data (AAAA-MM-DD)"
-          placeholder="2026-09-01"
+        <DatePickerInput
+          label="Data da transação"
           value={date}
-          onChangeText={setDate}
-          leftIcon={<Calendar size={20} color={colors.textSecondary} />}
+          onChange={setDate}
           error={validationErrors.date}
         />
 
