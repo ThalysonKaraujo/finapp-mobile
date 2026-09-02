@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { Transaction, transactionApi } from '@/entities/transaction';
 
 export type TransactionFilter = 'ALL' | 'INCOME' | 'EXPENSE';
@@ -13,34 +14,40 @@ export function useTransactionsFeed() {
   const [hasMore, setHasMore] = useState(false);
   const [isBalanceVisible, setIsBalanceVisible] = useState(true);
 
-  const fetchTransactions = useCallback(async (pageNum = 1, isRefresh = false) => {
-    if (isRefresh) {
-      setIsRefreshing(true);
-    } else if (pageNum === 1) {
-      setIsLoading(true);
-    }
-    setError(null);
-
-    try {
-      const response = await transactionApi.getTransactions(pageNum, 30);
-      if (pageNum === 1) {
-        setTransactions(response.data);
-      } else {
-        setTransactions((prev) => [...prev, ...response.data]);
+  const fetchTransactions = useCallback(
+    async (pageNum = 1, isRefresh = false) => {
+      if (isRefresh) {
+        setIsRefreshing(true);
+      } else if (pageNum === 1 && transactions.length === 0) {
+        setIsLoading(true);
       }
-      setHasMore(response.meta.page < response.meta.totalPages);
-      setPage(pageNum);
-    } catch (err: any) {
-      setError(err?.message || 'Erro ao carregar transações.');
-    } finally {
-      setIsLoading(false);
-      setIsRefreshing(false);
-    }
-  }, []);
+      setError(null);
 
-  useEffect(() => {
-    fetchTransactions(1);
-  }, [fetchTransactions]);
+      try {
+        const response = await transactionApi.getTransactions(pageNum, 30);
+        if (pageNum === 1) {
+          setTransactions(response.data);
+        } else {
+          setTransactions((prev) => [...prev, ...response.data]);
+        }
+        setHasMore(response.meta.page < response.meta.totalPages);
+        setPage(pageNum);
+      } catch (err: any) {
+        setError(err?.message || 'Erro ao carregar transações.');
+      } finally {
+        setIsLoading(false);
+        setIsRefreshing(false);
+      }
+    },
+    [transactions.length],
+  );
+
+  // Auto reload feed data whenever screen gains focus (e.g., returning from CreateTransaction modal)
+  useFocusEffect(
+    useCallback(() => {
+      fetchTransactions(1);
+    }, [fetchTransactions]),
+  );
 
   const onRefresh = useCallback(() => {
     fetchTransactions(1, true);
@@ -55,8 +62,10 @@ export function useTransactionsFeed() {
   const filteredTransactions = useMemo(() => {
     if (filter === 'ALL') return transactions;
     return transactions.filter((t) => {
-      if (filter === 'INCOME') return t.type === 'INCOME' || t.type === 'TRANSFER_IN';
-      if (filter === 'EXPENSE') return t.type === 'EXPENSE' || t.type === 'TRANSFER_OUT';
+      if (filter === 'INCOME')
+        return t.type === 'INCOME' || t.type === 'TRANSFER_IN';
+      if (filter === 'EXPENSE')
+        return t.type === 'EXPENSE' || t.type === 'TRANSFER_OUT';
       return true;
     });
   }, [transactions, filter]);
