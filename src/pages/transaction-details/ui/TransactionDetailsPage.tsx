@@ -1,7 +1,16 @@
-import { Calendar, Hash, Layers, Trash2 } from 'lucide-react-native';
-import React, { useState } from 'react';
+import {
+  Calendar,
+  Hash,
+  Layers,
+  Tag,
+  Trash2,
+  Wallet as WalletIcon,
+} from 'lucide-react-native';
+import React, { useEffect, useState } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
+import { Category, categoryApi } from '@/entities/category';
 import { Transaction, transactionApi } from '@/entities/transaction';
+import { Wallet, walletApi } from '@/entities/wallet';
 import { formatCentsToBRL, formatDateFull } from '@/shared/lib';
 import { colors, spacing, typography } from '@/shared/theme';
 import { Badge, Button, Card, Header, ScreenWrapper } from '@/shared/ui';
@@ -18,6 +27,29 @@ export const TransactionDetailsPage: React.FC<TransactionDetailsPageProps> = ({
   onDeleted,
 }) => {
   const [isDeleting, setIsDeleting] = useState(false);
+  const [wallet, setWallet] = useState<Wallet | null>(null);
+  const [category, setCategory] = useState<Category | null>(null);
+
+  useEffect(() => {
+    async function loadAuxiliaryInfo() {
+      try {
+        if (transaction.walletId) {
+          const wallets = await walletApi.getWallets();
+          const found = wallets.find((w) => w.id === transaction.walletId);
+          if (found) setWallet(found);
+        }
+
+        if (transaction.categoryId) {
+          const categories = await categoryApi.getCategories();
+          const found = categories.find((c) => c.id === transaction.categoryId);
+          if (found) setCategory(found);
+        }
+      } catch {
+        // Handled silently
+      }
+    }
+    loadAuxiliaryInfo();
+  }, [transaction.walletId, transaction.categoryId]);
 
   const isIncome =
     transaction.type === 'INCOME' || transaction.type === 'TRANSFER_IN';
@@ -105,6 +137,46 @@ export const TransactionDetailsPage: React.FC<TransactionDetailsPageProps> = ({
         </View>
 
         <View style={styles.divider} />
+
+        {/* Wallet info if present */}
+        {wallet && (
+          <>
+            <View style={styles.infoRow}>
+              <View style={styles.infoIconWrapper}>
+                <WalletIcon size={18} color={colors.primary} />
+              </View>
+              <View style={styles.infoTextContainer}>
+                <Text style={styles.infoLabel}>Carteira / Conta</Text>
+                <Text style={styles.infoValue}>{wallet.name}</Text>
+              </View>
+            </View>
+            <View style={styles.divider} />
+          </>
+        )}
+
+        {/* Category info if present */}
+        {category && (
+          <>
+            <View style={styles.infoRow}>
+              <View style={styles.infoIconWrapper}>
+                <Tag size={18} color={category.color || colors.primary} />
+              </View>
+              <View style={styles.infoTextContainer}>
+                <Text style={styles.infoLabel}>Categoria</Text>
+                <View style={styles.categoryNameRow}>
+                  <View
+                    style={[
+                      styles.categoryDot,
+                      { backgroundColor: category.color || colors.primary },
+                    ]}
+                  />
+                  <Text style={styles.infoValue}>{category.name}</Text>
+                </View>
+              </View>
+            </View>
+            <View style={styles.divider} />
+          </>
+        )}
 
         {/* Installments */}
         {transaction.installmentNumber && (
@@ -221,6 +293,17 @@ const styles = StyleSheet.create({
     ...typography.caption,
     color: colors.textMuted,
     marginTop: 2,
+  },
+  categoryNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 2,
+  },
+  categoryDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
   },
   divider: {
     height: 1,
